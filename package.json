@@ -1,19 +1,19 @@
 {
-  "name": "nyan-store",
-  "version": "1.0.0",
-  "description": "The backend of Nyan's Store, a fullstack and fully functional Ecommerce Website",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Nhan Pham",
-  "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^2.0.19"
-  },
-  "dependencies": {
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "mongoose": "^6.5.3"
-  }
+    "name": "nyan-store",
+    "version": "1.0.0",
+    "description": "The backend of Nyan's Store, a fullstack and fully functional Ecommerce Website",
+    "main": "server.js",
+    "scripts": {
+        "start": "nodemon server.js"
+    },
+    "author": "Nhan Pham",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "^2.0.19"
+    },
+    "dependencies": {
+        "dotenv": "^16.0.1",
+        "express": "^4.18.1",
+        "mongoose": "^6.5.3"
+    }
 }
