@@ -1,0 +1,11 @@
+{
+  "name": "nyan-store",
+  "version": "1.0.0",
+  "description": "The backend of Nyan's Store, a fullstack and fully functional Ecommerce Website",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nhan Pham",
+  "license": "ISC"
+}
