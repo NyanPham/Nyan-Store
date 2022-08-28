@@ -9,12 +9,7 @@ router.use('/:productId/bidding', biddingRouter)
 
 router
     .route('/')
-    .get(
-        authController.protect,
-        authController.restrictTo('admin'),
-        productController.getCollectionAndCategoryIds,
-        productController.getAllProducts
-    )
+    .get(authController.protect, productController.getCollectionAndCategoryIds, productController.getAllProducts)
     .post(productController.createProducts)
 router
     .route('/:id')

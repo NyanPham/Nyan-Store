@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const helmet = require('helmet')
@@ -49,6 +50,9 @@ app.use(
         ],
     })
 )
+
+// Serve
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Transfer data to process
 app.use(express.json({ limit: '10kb' }))

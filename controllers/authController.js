@@ -29,6 +29,20 @@ const signAndSendToken = (user, res, statusCode) => {
     })
 }
 
+const sendIsLoggedIn = (res, isLoggedIn) => {
+    if (!isLoggedIn) {
+        return res.status(400).json({
+            status: 'fail',
+            isLoggedIn,
+        })
+    }
+
+    res.status(200).json({
+        status: 'success',
+        isLoggedIn,
+    })
+}
+
 exports.signUp = catchAsync(async (req, res, next) => {
     const newUser = await User.create({
         name: req.body.name,
@@ -60,6 +74,17 @@ exports.logIn = catchAsync(async (req, res, next) => {
     signAndSendToken(user, res, 200)
 })
 
+exports.logOut = catchAsync(async (req, res, next) => {
+    res.cookie('jwt', 'logged_out', {
+        expires: new Date(Date.now() + 10 * 1000),
+    })
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Logged out successfully',
+    })
+})
+
 exports.protect = catchAsync(async (req, res, next) => {
     let token
 
@@ -87,6 +112,23 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.user = currentUser
     next()
 })
+
+exports.isLoggedIn = async (req, res, next) => {
+    try {
+        const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET)
+
+        const currentUser = await User.findById(decoded.id)
+        if (currentUser == null) return sendIsLoggedIn(res, false)
+
+        if (currentUser.changedPasswordAfter(decoded.iat)) {
+            return sendIsLoggedIn(res, false)
+        }
+    } catch (err) {
+        return sendIsLoggedIn(res, false)
+    }
+
+    return sendIsLoggedIn(res, true)
+}
 
 exports.restrictTo = (...allowedRoles) => {
     return (req, res, next) => {
