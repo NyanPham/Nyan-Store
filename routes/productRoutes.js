@@ -1,9 +1,10 @@
 const express = require('express')
 const productController = require('../controllers/productController')
+const authController = require('../controllers/authController')
 
 const router = express.Router()
 
-router.route('/').get(productController.getAllProducts).post(productController.createProducts)
+router.route('/').get(authController.protect, productController.getAllProducts).post(productController.createProducts)
 router
     .route('/:id')
     .get(productController.getProduct)

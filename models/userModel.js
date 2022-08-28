@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema(
@@ -14,6 +15,8 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: [true, 'A user must have a password'],
+            minlength: [8, 'A password must be at least 8 in length'],
+            select: false,
         },
         passwordConfirm: {
             type: String,
@@ -58,12 +61,38 @@ const userSchema = new mongoose.Schema(
                 message: 'A user must be either normal user or admin',
             },
         },
+        active: {
+            type: Boolean,
+            default: true,
+        },
     },
     {
         toObject: { virtuals: true },
         toJSON: { virtuals: true },
     }
 )
+
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next()
+
+    this.password = await bcrypt.hash(this.password, 12)
+    this.passwordConfirm = undefined
+
+    next()
+})
+
+userSchema.methods.comparePassword = async function (candidatePassword, password) {
+    return await bcrypt.compare(candidatePassword, password)
+}
+
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+    if (this.passwordChangedAt != null) {
+        const passwordChangedTimestamp = new Date(this.passwordChangedAt).getTime() / 1000
+        return passwordChangedTimestamp > JWTTimestamp
+    }
+
+    return false
+}
 
 const User = mongoose.model('User', userSchema)
 
