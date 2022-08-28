@@ -145,3 +145,23 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
     signAndSendToken(user, res, 200)
 })
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+    const { currentPassword, password, passwordConfirm } = req.body
+
+    const user = await User.findById(req.user._id).select('+password')
+    const correctPassword = await user.comparePassword(currentPassword, user.password)
+
+    if (user == null || !correctPassword) {
+        return next(new AppError('Wrong email or password', 403))
+    }
+
+    user.password = password
+    user.passwordConfirm = passwordConfirm
+    await user.save()
+
+    res.status(200).json({
+        status: 'success',
+        message: 'The password has been changed successfully!',
+    })
+})
