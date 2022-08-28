@@ -1,8 +1,10 @@
 const { promisify } = require('util')
+const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
-const catchAsync = require('../utils/catchAsync')
 const AppError = require('../utils/appError')
+const catchAsync = require('../utils/catchAsync')
+const sendEmail = require('../utils/email')
 
 const signToken = (id) =>
     jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -48,7 +50,7 @@ exports.logIn = catchAsync(async (req, res, next) => {
     const { email, password } = req.body
 
     const user = await User.findOne({ email }).select('+password')
-    const correctPassword = user?.comparePassword(password, user.password)
+    const correctPassword = await user?.comparePassword(password, user.password)
 
     if (user == null || !correctPassword) {
         return next(new AppError('Incorrect email or password. Please try again...', 401))
@@ -94,3 +96,52 @@ exports.restrictTo = (...allowedRoles) => {
         next()
     }
 }
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email })
+
+    const token = user?.createResetToken()
+    await user?.save({ validateBeforeSave: false })
+
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${token}`
+    const message = `Click the link below to reset your password\n${resetUrl}\nThe reset token is only valid in 10 minutes. Be hurry!`
+
+    try {
+        await sendEmail({
+            to: user?.email,
+            subject: 'RESET PASSWORD WITH TOKEN',
+            message,
+        })
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Reset token has been sent!',
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Failed to send reset token',
+            error: err,
+        })
+    }
+})
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+    const user = await User.findOne({
+        resetPasswordToken: crypto.createHash('sha256').update(req.params.resetToken).digest('hex'),
+        resetPasswordExpires: {
+            $gte: Date.now(),
+        },
+    })
+    if (user == null) {
+        return next(new AppError('The reset token has expired. Please try again...', 400))
+    }
+
+    user.password = req.body.password
+    user.passwordConfirm = req.body.passwordConfirm
+    user.resetPasswordExpires = undefined
+    user.resetPasswordToken = undefined
+    await user.save()
+
+    signAndSendToken(user, res, 200)
+})
