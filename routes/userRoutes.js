@@ -1,8 +1,12 @@
 const express = require('express')
 const authController = require('../controllers/authController')
 const userController = require('../controllers/userController')
+const biddingRouter = require('./biddingRoutes')
 
 const router = express.Router()
+
+// To bidding
+router.use('/myBidding', authController.protect, biddingRouter)
 
 // Authentication
 router.post('/signUp', authController.signUp)

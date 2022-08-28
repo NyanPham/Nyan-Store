@@ -12,8 +12,6 @@ class APIFeatures {
         let queryString = JSON.stringify(queryObjClone)
         queryString = queryString.replace(/\b(gt|gte|le|lte)\b/g, (match) => `$${match}`)
 
-        console.log(JSON.parse(queryString))
-
         this.query.find(JSON.parse(queryString))
 
         return this

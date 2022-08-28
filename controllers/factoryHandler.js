@@ -2,9 +2,38 @@ const catchAsync = require('../utils/catchAsync')
 const APIFeatures = require('../utils/apiFeatures')
 const AppError = require('../utils/appError')
 
+const constructQueryFilter = (obj) => {
+    const { collectionId, categoryId, user, product } = obj
+    const filterObj = {}
+
+    if (collectionId) {
+        filterObj.collections = {
+            $in: collectionId,
+        }
+    }
+
+    if (categoryId) {
+        filterObj.categories = {
+            $in: categoryId,
+        }
+    }
+
+    if (user) {
+        filterObj.user = user
+    }
+
+    if (product) {
+        filterObj.product = product
+    }
+
+    return filterObj
+}
+
 exports.getAll = (Model) => {
     return catchAsync(async (req, res, next) => {
-        const features = new APIFeatures(Model.find(), req.query)
+        const filterObj = constructQueryFilter(req.body)
+
+        const features = new APIFeatures(Model.find(filterObj), req.query)
         features.find().sort().limitFields().paginate()
 
         const docs = await features.query
@@ -36,9 +65,15 @@ exports.createOne = (Model) => {
     })
 }
 
-exports.getOne = (Model) => {
+exports.getOne = (Model, populateObject = null) => {
     return catchAsync(async (req, res, next) => {
-        const doc = await Model.findById(req.params.id)
+        const query = Model.findById(req.params.id)
+
+        if (populateObject != null) {
+            query.populate(populateObject)
+        }
+
+        const doc = await query
 
         if (doc == null) {
             return next(new AppError('No document found with that ID', 400))

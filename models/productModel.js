@@ -92,8 +92,6 @@ productSchema.pre('save', function (next) {
         return variant.price
     }, this.variants[0].price)
 
-    console.log(this.maxPrice, this.minPrice)
-
     next()
 })
 

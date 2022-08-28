@@ -21,7 +21,9 @@
         "tags": ["shoes", "footwear", "new"],
         "bidding": {
             "onBidding": false
-        }
+        },
+        "collections": ["630b26abce3f60a89b2738ef"],
+        "categories": ["630b26abce3f60a89b2738f7"]
     },
     {
         "name": "Shoes 2",
@@ -78,7 +80,9 @@
         "tags": ["shoes", "footwear", "new"],
         "bidding": {
             "onBidding": false
-        }
+        },
+        "collections": ["630b26abce3f60a89b2738f0"],
+        "categories": ["630b26abce3f60a89b2738f7"]
     },
     {
         "name": "Shoes 3",
@@ -135,7 +139,9 @@
         "tags": ["shoes", "footwear", "new"],
         "bidding": {
             "onBidding": false
-        }
+        },
+        "collections": ["630b26abce3f60a89b2738f1"],
+        "categories": ["630b26abce3f60a89b2738f7"]
     },
     {
         "name": "Shoes 4",
@@ -228,7 +234,9 @@
         "tags": ["shoes", "footwear", "new"],
         "bidding": {
             "onBidding": false
-        }
+        },
+        "collections": ["630b26abce3f60a89b2738ef"],
+        "categories": ["630b26abce3f60a89b2738f7"]
     },
     {
         "name": "Shoes 5",
@@ -321,6 +329,8 @@
         "tags": ["shoes", "footwear", "new"],
         "bidding": {
             "onBidding": false
-        }
+        },
+        "collections": ["630b26abce3f60a89b2738ef"],
+        "categories": ["630b26abce3f60a89b2738f7"]
     }
 ]
