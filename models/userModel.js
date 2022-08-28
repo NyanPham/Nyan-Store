@@ -60,6 +60,7 @@ const userSchema = new mongoose.Schema(
                 values: ['user', 'admin'],
                 message: 'A user must be either normal user or admin',
             },
+            default: 'user',
         },
         active: {
             type: Boolean,

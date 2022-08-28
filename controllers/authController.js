@@ -84,3 +84,13 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.user = currentUser
     next()
 })
+
+exports.restrictTo = (...allowedRoles) => {
+    return (req, res, next) => {
+        if (!allowedRoles.includes(req.user.role)) {
+            return next(new AppError('You have no permission to implement the action', 403))
+        }
+
+        next()
+    }
+}
