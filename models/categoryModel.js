@@ -17,6 +17,10 @@ const categorySchema = new mongoose.Schema({
     },
 })
 
+categorySchema.index({
+    createdAt: -1,
+})
+
 const Category = mongoose.model('Category', categorySchema)
 
 module.exports = Category

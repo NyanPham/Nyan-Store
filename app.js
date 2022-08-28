@@ -1,7 +1,13 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
-const AppError = require('./utils/appError')
+const helmet = require('helmet')
+const xss = require('xss-clean')
+const rateLimit = require('express-rate-limit')
+const mongoSanitize = require('express-mongo-sanitize')
+const hpp = require('hpp')
+const cors = require('cors')
 
+const AppError = require('./utils/appError')
 const globalErrorHandler = require('./controllers/errorController')
 const productRouter = require('./routes/productRoutes')
 const userRouter = require('./routes/userRoutes')
@@ -11,6 +17,38 @@ const biddingRouter = require('./routes/biddingRoutes')
 const orderRouter = require('./routes/orderRoutes')
 
 const app = express()
+
+// Security
+app.use(helmet())
+app.use(cors())
+app.options('*', cors())
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 1000,
+    message: 'You have reached the maximum query limit. Please wait for 15 minutes...',
+})
+app.use(limiter)
+app.use(mongoSanitize())
+app.use(xss())
+app.use(
+    hpp({
+        whitelist: [
+            'name',
+            'vendor',
+            'variants',
+            'SKU',
+            'slug',
+            'maxPrice',
+            'minPrice',
+            'categories',
+            'collections',
+            'tags',
+            'inventory',
+            'bidding',
+        ],
+    })
+)
 
 // Transfer data to process
 app.use(express.json({ limit: '10kb' }))

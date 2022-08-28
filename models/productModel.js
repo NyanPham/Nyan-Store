@@ -81,6 +81,10 @@ const productSchema = new mongoose.Schema(
     }
 )
 
+productSchema.index({
+    name: 1,
+})
+
 productSchema.pre('save', function (next) {
     this.maxPrice = this.variants.reduce((max, variant) => {
         if (variant.price <= max) return max

@@ -25,6 +25,10 @@ const biddingSchema = new mongoose.Schema({
     },
 })
 
+biddingSchema.index({
+    createdAt: -1,
+})
+
 const Bidding = mongoose.model('Bidding', biddingSchema)
 
 module.exports = Bidding

@@ -39,6 +39,10 @@ const orderSchema = new mongoose.Schema(
     }
 )
 
+orderSchema.index({
+    createdAt: -1,
+})
+
 orderSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'items',

@@ -18,6 +18,10 @@ const collectionSchema = new mongoose.Schema({
     },
 })
 
+collectionSchema.index({
+    createdAt: -1,
+})
+
 collectionSchema.methods.getProducts = async function (collectionId) {
     const products = await Product.find({
         collections: {
