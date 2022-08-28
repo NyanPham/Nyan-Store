@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema(
         name: {
             type: String,
             required: [true, 'A product must have a name'],
+            unique: [true, 'A product name must be unique'],
         },
         vendor: {
             type: String,
@@ -43,6 +44,7 @@ const productSchema = new mongoose.Schema(
         SKU: {
             type: String,
             required: [true, 'A product must have an SKU'],
+            unique: [true, 'A product SKU must be unique'],
         },
         slug: String,
         categories: [

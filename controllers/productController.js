@@ -1,25 +1,26 @@
 const Product = require('../models/productModel')
+const AppError = require('../utils/appError')
 
 const catchAsync = require('../utils/catchAsync')
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-    try {
-        const products = await Product.find()
+    const products = await Product.find()
 
-        res.status(200).json({
-            status: 'success',
-            results: products.length,
-            data: {
-                products,
-            },
-        })
-    } catch (err) {
-        next(err)
-    }
+    res.status(200).json({
+        status: 'success',
+        results: products.length,
+        data: {
+            products,
+        },
+    })
 })
 
 exports.createProducts = catchAsync(async (req, res, next) => {
     const newProduct = await Product.create(req.body)
+
+    if (newProduct == null) {
+        return next(new AppError('No new product created', 400))
+    }
 
     res.status(201).json({
         status: 'success',
@@ -31,6 +32,10 @@ exports.createProducts = catchAsync(async (req, res, next) => {
 
 exports.getProduct = catchAsync(async (req, res, next) => {
     const product = await Product.findById(req.params.id)
+
+    if (product == null) {
+        return next(new AppError('No product found with that ID', 400))
+    }
 
     res.status(200).json({
         status: 'success',
@@ -46,6 +51,10 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
         runValidators: true,
     })
 
+    if (updatedProduct == null) {
+        return next(new AppError('No product updated with that ID', 400))
+    }
+
     res.status(200).json({
         status: 'success',
         data: {
@@ -56,6 +65,10 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
 
 exports.deleteProduct = catchAsync(async (req, res, next) => {
     const deletedProduct = await Product.findByIdAndDelete(req.params.id)
+
+    if (deletedProduct == null) {
+        return next(new AppError('No product deleted with that ID', 400))
+    }
 
     res.status(204).json({
         status: 'success',

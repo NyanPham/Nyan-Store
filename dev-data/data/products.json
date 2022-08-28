@@ -23,5 +23,304 @@
             "onBidding": false
         }
     },
-    {}
+    {
+        "name": "Shoes 2",
+        "vendor": "Adidas",
+        "images": ["image-3", "image-4"],
+        "description": "",
+        "summary": "This is a new product. Wearing this, you will find yourself confident, powerful and energetic.",
+        "variants": [
+            {
+                "name": "Shoes 1",
+                "option1": "X",
+                "option2": "Blue",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 240,
+                "inventory": 20
+            },
+            {
+                "name": "Shoes 2",
+                "option1": "X",
+                "option2": "Green",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 240,
+                "inventory": 20
+            },
+            {
+                "name": "Shoes 3",
+                "option1": "X",
+                "option2": "Purple",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 120,
+                "oldPrice": 150,
+                "inventory": 200
+            },
+            {
+                "name": "Shoes 4",
+                "option1": "M",
+                "option2": "Purple",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 150,
+                "oldPrice": 200,
+                "inventory": 50
+            },
+            {
+                "name": "Shoes 5",
+                "option1": "L",
+                "option2": "Purple",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 240,
+                "oldPrice": 300,
+                "inventory": 20
+            }
+        ],
+        "SKU": "SHOE-32",
+        "tags": ["shoes", "footwear", "new"],
+        "bidding": {
+            "onBidding": false
+        }
+    },
+    {
+        "name": "Shoes 3",
+        "vendor": "Aninas",
+        "images": ["image-5", "image-6"],
+        "description": "",
+        "summary": "This is a new product. Wearing this, you will find yourself confident, powerful and energetic.",
+        "variants": [
+            {
+                "name": "Love in sight",
+                "option1": "24",
+                "option2": "Blue",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 450,
+                "oldPrice": 500,
+                "inventory": 37
+            },
+            {
+                "name": "Great in love",
+                "option1": "24",
+                "option2": "Green",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 540,
+                "inventory": 82
+            },
+            {
+                "name": "Bad at love",
+                "option1": "24",
+                "option2": "Purple",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 440,
+                "inventory": 56
+            },
+            {
+                "name": "Done at love",
+                "option1": "23",
+                "option2": "Green",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 240,
+                "oldPrice": 260,
+                "inventory": 30
+            },
+            {
+                "name": "Interested in love",
+                "option1": "23",
+                "option2": "Purple",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 240,
+                "oldPrice": 300,
+                "inventory": 20
+            }
+        ],
+        "SKU": "SHOE-23",
+        "tags": ["shoes", "footwear", "new"],
+        "bidding": {
+            "onBidding": false
+        }
+    },
+    {
+        "name": "Shoes 4",
+        "vendor": "Springer",
+        "images": ["image-7", "image-8"],
+        "description": "",
+        "summary": "This is a new product. Wearing this, you will find yourself confident, powerful and energetic.",
+        "variants": [
+            {
+                "name": "Toptop",
+                "option1": "23",
+                "option2": "Blue",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 340,
+                "oldPrice": 500,
+                "inventory": 76
+            },
+            {
+                "name": "Tkasil",
+                "option1": "23",
+                "option2": "Green",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 240,
+                "oldPrice": 300,
+                "inventory": 20
+            },
+            {
+                "name": "Killaus",
+                "option1": "23",
+                "option2": "Purple",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 540,
+                "inventory": 14
+            },
+            {
+                "name": "Uitl",
+                "option1": "23",
+                "option2": "Black",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 640,
+                "inventory": 78
+            },
+            {
+                "name": "Multi",
+                "option1": "23",
+                "option2": "Red",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 340,
+                "oldPrice": 400,
+                "inventory": 8
+            },
+            {
+                "name": "poups",
+                "option1": "24",
+                "option2": "Green",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 640,
+                "oldPrice": 700,
+                "inventory": 98
+            },
+            {
+                "name": "filaasuh",
+                "option1": "24",
+                "option2": "Purple",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 340,
+                "oldPrice": 390,
+                "inventory": 12
+            },
+            {
+                "name": "Jumphsnd",
+                "option1": "24",
+                "option2": "Black",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 560,
+                "oldPrice": 800,
+                "inventory": 80
+            },
+            {
+                "name": "putonsg",
+                "option1": "24",
+                "option2": "White",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 140,
+                "oldPrice": 300,
+                "inventory": 50
+            }
+        ],
+        "SKU": "SHOE-24",
+        "tags": ["shoes", "footwear", "new"],
+        "bidding": {
+            "onBidding": false
+        }
+    },
+    {
+        "name": "Shoes 5",
+        "vendor": "Springer",
+        "images": ["image-9", "image-10"],
+        "description": "",
+        "summary": "This is a new product. Wearing this, you will find yourself confident, powerful and energetic.",
+        "variants": [
+            {
+                "name": "Toptop 2",
+                "option1": "21",
+                "option2": "Blue",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 340,
+                "oldPrice": 500,
+                "inventory": 76
+            },
+            {
+                "name": "Tkasil 2",
+                "option1": "21",
+                "option2": "Green",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 240,
+                "oldPrice": 300,
+                "inventory": 20
+            },
+            {
+                "name": "Killaus 2",
+                "option1": "21",
+                "option2": "Purple",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 540,
+                "inventory": 14
+            },
+            {
+                "name": "Uitl 2",
+                "option1": "21",
+                "option2": "Black",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 640,
+                "inventory": 78
+            },
+            {
+                "name": "Multi 2",
+                "option1": "20",
+                "option2": "Red",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 340,
+                "oldPrice": 400,
+                "inventory": 8
+            },
+            {
+                "name": "poups 2",
+                "option1": "25",
+                "option2": "Green",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 640,
+                "oldPrice": 700,
+                "inventory": 98
+            },
+            {
+                "name": "filaasuh 2",
+                "option1": "25",
+                "option2": "Purple",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 340,
+                "oldPrice": 390,
+                "inventory": 12
+            },
+            {
+                "name": "Jumphsnd 2",
+                "option1": "25",
+                "option2": "Black",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 560,
+                "oldPrice": 800,
+                "inventory": 80
+            },
+            {
+                "name": "putonsg 2",
+                "option1": "25",
+                "option2": "White",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 140,
+                "oldPrice": 300,
+                "inventory": 50
+            }
+        ],
+        "SKU": "SHOE-25",
+        "tags": ["shoes", "footwear", "new"],
+        "bidding": {
+            "onBidding": false
+        }
+    }
 ]
