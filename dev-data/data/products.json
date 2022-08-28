@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Shoes",
+        "vendor": "Nike",
+        "images": ["image-1", "image-2"],
+        "description": "",
+        "summary": "This is a new product. Wearing this, you will find yourself confident, powerful and energetic.",
+        "variants": [
+            {
+                "name": "Shoes 1",
+                "option1": "X",
+                "option2": "Blue",
+                "option3": "Rubber",
+                "images": ["image-1-1", "image-2-2"],
+                "price": 240,
+                "oldPrice": 300,
+                "inventory": 20
+            }
+        ],
+        "SKU": "SHOE-20",
+        "tags": ["shoes", "footwear", "new"],
+        "bidding": {
+            "onBidding": false
+        }
+    },
+    {}
+]

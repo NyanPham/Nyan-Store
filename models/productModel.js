@@ -12,14 +12,14 @@ const productSchema = new mongoose.Schema(
             type: String,
             default: 'Unknown',
         },
-        price: {
-            type: Number,
-            required: [true, 'A product must have a price'],
-        },
         images: [String],
+        description: String,
+        summary: {
+            type: String,
+            required: [true, 'A product must have a summary'],
+        },
         variants: [
             {
-                _id: mongoose.Schema.ObjectId,
                 name: {
                     type: String,
                     required: [true, 'A variant must have a name'],
@@ -40,10 +40,6 @@ const productSchema = new mongoose.Schema(
                 },
             },
         ],
-        inventory: {
-            type: Number,
-            default: 0,
-        },
         SKU: {
             type: String,
             required: [true, 'A product must have an SKU'],
@@ -66,6 +62,7 @@ const productSchema = new mongoose.Schema(
             type: Date,
             default: Date.now(),
         },
+        inventory: Number,
         bidding: {
             onBidding: {
                 type: Boolean,
