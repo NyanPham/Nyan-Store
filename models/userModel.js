@@ -63,6 +63,19 @@ const userSchema = new mongoose.Schema(
             },
             default: 'user',
         },
+        wishlist: [
+            {
+                item: {
+                    type: mongoose.Schema.ObjectId,
+                    ref: 'Product',
+                    required: [true, 'A wishlist item must have an ID'],
+                },
+                addedAt: {
+                    type: Date,
+                    required: true,
+                },
+            },
+        ],
         active: {
             type: Boolean,
             default: true,
