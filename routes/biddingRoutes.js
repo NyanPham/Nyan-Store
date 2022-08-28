@@ -1,11 +1,12 @@
 const express = require('express')
 const biddingController = require('../controllers/biddingController')
+const authController = require('../controllers/authController')
 
 const router = express.Router({ mergeParams: true })
 
 router
     .route('/')
-    .get(biddingController.getProductAndUserIds, biddingController.getAllBiddings)
+    .get(authController.protect, biddingController.getProductAndUserIds, biddingController.getAllBiddings)
     .post(biddingController.createBidding)
 router
     .route('/:id')

@@ -2,11 +2,17 @@ const express = require('express')
 const authController = require('../controllers/authController')
 const userController = require('../controllers/userController')
 const biddingRouter = require('./biddingRoutes')
+const orderRouter = require('./orderRoutes')
 
 const router = express.Router()
 
 // To bidding
-router.use('/myBidding', authController.protect, biddingRouter)
+router.use('/:userId/bidding', biddingRouter)
+router.use('/myBidding', biddingRouter)
+
+// To orders
+router.use('/:userId/orders', orderRouter)
+router.use('/myOrders', orderRouter)
 
 // Authentication
 router.post('/signUp', authController.signUp)

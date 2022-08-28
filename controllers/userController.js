@@ -15,6 +15,7 @@ const filterAllowedFields = (obj, ...allowedFields) => {
 
 exports.getMe = (req, res, next) => {
     req.params.id = req.user._id
+    req.body.user = req.user._id
 
     next()
 }

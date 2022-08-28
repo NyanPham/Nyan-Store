@@ -1,9 +1,15 @@
-const Bidding = require('../models/BiddingModel')
+const Bidding = require('../models/biddingModel')
 const factory = require('./factoryHandler')
 
 exports.getProductAndUserIds = (req, res, next) => {
-    if (req.user) req.body.user = req.user.id
     if (req.params.productId) req.body.product = req.params.productId
+    if (req.params.userId) req.body.user = req.params.userId
+
+    const parsedUrl = req.originalUrl.split('/')
+
+    if (parsedUrl[parsedUrl.length - 1].startsWith('my')) {
+        req.body.user = req.user._id
+    }
 
     next()
 }
