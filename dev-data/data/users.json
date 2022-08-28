@@ -1,0 +1,51 @@
+[
+    {
+        "name": "Jack Shepherd",
+        "email": "jack@gmail.com",
+        "password": "pass1234",
+        "passwordConfirm": "pass1234",
+        "address": "Binh Thanh HCMC",
+        "phone": "0947057091",
+        "role": "admin"
+    },
+    {
+        "name": "James Keith",
+        "email": "james@gmail.com",
+        "password": "pass1234",
+        "passwordConfirm": "pass1234",
+        "address": "Binh Thanh HCMC",
+        "phone": "91914913913"
+    },
+    {
+        "name": "Plethora",
+        "email": "plethora@gmail.com",
+        "password": "pass1234",
+        "passwordConfirm": "pass1234",
+        "address": "Binh Thanh HCMC",
+        "phone": "1919413"
+    },
+    {
+        "name": "John Johnson",
+        "email": "johnson@gmail.com",
+        "password": "pass1234",
+        "passwordConfirm": "pass1234",
+        "address": "Binh Thanh HCMC",
+        "phone": "543456643"
+    },
+    {
+        "name": "Violet",
+        "email": "violet@gmail.com",
+        "password": "pass1234",
+        "passwordConfirm": "pass1234",
+        "address": "Binh Thanh HCMC",
+        "phone": "123413321"
+    },
+    {
+        "name": "Valhein",
+        "email": "valhein@gmail.com",
+        "password": "pass1234",
+        "passwordConfirm": "pass1234",
+        "address": "Binh Thanh HCMC",
+        "phone": "1515148415"
+    }
+]

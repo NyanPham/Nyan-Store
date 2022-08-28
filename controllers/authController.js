@@ -5,6 +5,7 @@ const User = require('../models/userModel')
 const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 const sendEmail = require('../utils/email')
+const factory = require('../controllers/factoryHandler')
 
 const signToken = (id) =>
     jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -103,12 +104,16 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     const token = user?.createResetToken()
     await user?.save({ validateBeforeSave: false })
 
+    if (user == null) {
+        return next(new AppError('No user found with that email', 400))
+    }
+
     const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${token}`
     const message = `Click the link below to reset your password\n${resetUrl}\nThe reset token is only valid in 10 minutes. Be hurry!`
 
     try {
         await sendEmail({
-            to: user?.email,
+            to: user.email,
             subject: 'RESET PASSWORD WITH TOKEN',
             message,
         })
@@ -118,6 +123,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
             message: 'Reset token has been sent!',
         })
     } catch (err) {
+        user.resetPasswordToken = undefined
+        user.resetPasswordExpires = undefined
+        await user.save({ validateBeforeSave: false })
+
         res.status(500).json({
             status: 'error',
             message: 'Failed to send reset token',
@@ -165,12 +174,3 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
         message: 'The password has been changed successfully!',
     })
 })
-
-exports.getMe = catchAsync(async (req, res, next) => {})
-exports.deleteMe = catchAsync(async (req, res, next) => {})
-exports.updateMe = catchAsync(async (req, res, next) => {})
-
-exports.getAllUsers = catchAsync(async (req, res, next) => {})
-exports.getUser = catchAsync(async (req, res, next) => {})
-exports.deleteUser = catchAsync(async (req, res, next) => {})
-exports.upateUser = catchAsync(async (req, res, next) => {})
