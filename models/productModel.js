@@ -41,6 +41,8 @@ const productSchema = new mongoose.Schema(
                 },
             },
         ],
+        minPrice: Number,
+        maxPrice: Number,
         SKU: {
             type: String,
             required: [true, 'A product must have an SKU'],
@@ -78,6 +80,22 @@ const productSchema = new mongoose.Schema(
         toJSON: { virtuals: true },
     }
 )
+
+productSchema.pre('save', function (next) {
+    this.maxPrice = this.variants.reduce((max, variant) => {
+        if (variant.price <= max) return max
+        return variant.price
+    }, this.variants[0].price)
+
+    this.minPrice = this.variants.reduce((min, variant) => {
+        if (variant.price >= min) return min
+        return variant.price
+    }, this.variants[0].price)
+
+    console.log(this.maxPrice, this.minPrice)
+
+    next()
+})
 
 productSchema.pre('save', function (next) {
     this.slug = slugify(this.name)

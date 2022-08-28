@@ -165,3 +165,12 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
         message: 'The password has been changed successfully!',
     })
 })
+
+exports.getMe = catchAsync(async (req, res, next) => {})
+exports.deleteMe = catchAsync(async (req, res, next) => {})
+exports.updateMe = catchAsync(async (req, res, next) => {})
+
+exports.getAllUsers = catchAsync(async (req, res, next) => {})
+exports.getUser = catchAsync(async (req, res, next) => {})
+exports.deleteUser = catchAsync(async (req, res, next) => {})
+exports.upateUser = catchAsync(async (req, res, next) => {})
