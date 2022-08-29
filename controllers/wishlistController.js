@@ -1,0 +1,70 @@
+const User = require('../models/userModel')
+const catchAsync = require('../utils/catchAsync')
+const AppError = require('../utils/appError')
+
+exports.getWishlist = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.user._id)
+
+    if (user == null) {
+        return next(new AppError('No user found with that ID', 400))
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            wishlist: user.wishlist,
+        },
+    })
+})
+
+exports.addWishlist = catchAsync(async (req, res, next) => {
+    if (req.body.wishlist == null) {
+        return next(new AppError('No item to add', 400))
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            wishlist: [...req.user.wishlist, req.body.wishlist],
+        },
+        {
+            new: true,
+            runValidators: true,
+        }
+    )
+
+    if (user == null) {
+        return next(new AppError('No user found with that ID', 400))
+    }
+
+    res.status(201).json({
+        status: 'success',
+        data: {
+            wishlist: user.wishlist,
+        },
+    })
+})
+
+exports.removeWishlist = catchAsync(async (req, res, next) => {
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            wishlist: req.user.wishlist.filter((item) => item._id != req.body.wishlist),
+        },
+        {
+            new: true,
+            runValidators: true,
+        }
+    )
+
+    if (user == null) {
+        return next(new AppError('No user found with that ID', 400))
+    }
+
+    res.status(204).json({
+        status: 'success',
+        data: {
+            wishlist: user.wishlist,
+        },
+    })
+})

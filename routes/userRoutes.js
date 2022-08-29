@@ -1,6 +1,7 @@
 const express = require('express')
 const authController = require('../controllers/authController')
 const userController = require('../controllers/userController')
+const wishlistController = require('../controllers/wishlistController')
 const biddingRouter = require('./biddingRoutes')
 const orderRouter = require('./orderRoutes')
 
@@ -18,6 +19,9 @@ router.use('/myOrders', orderRouter)
 
 // On client
 router.get('/isLoggedIn', authController.isLoggedIn)
+router.get('/myWishlist', authController.protect, wishlistController.getWishlist)
+router.patch('/addWishlist', authController.protect, wishlistController.addWishlist)
+router.patch('/removeWishlist', authController.protect, wishlistController.removeWishlist)
 
 // Authentication
 router.post('/signUp', authController.signUp)
