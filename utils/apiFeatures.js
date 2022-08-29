@@ -12,7 +12,10 @@ class APIFeatures {
         let queryString = JSON.stringify(queryObjClone)
         queryString = queryString.replace(/\b(gt|gte|le|lte|elemMatch)\b/g, (match) => `$${match}`)
 
-        this.query.find(JSON.parse(queryString))
+        const parsedQueryObj = JSON.parse(queryString)
+        APIFeatures.checkBooleanValue(parsedQueryObj)
+
+        this.query.find(parsedQueryObj)
 
         return this
     }
@@ -49,6 +52,16 @@ class APIFeatures {
         }
 
         return this
+    }
+
+    static checkBooleanValue(obj) {
+        Object.entries(obj).forEach(([key, value]) => {
+            if (typeof value !== 'object') {
+                if (value === 'true' || value === 'false') obj[key] = value === 'true'
+            } else {
+                APIFeatures.checkBooleanValue(value)
+            }
+        })
     }
 }
 
