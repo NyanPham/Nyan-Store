@@ -18,14 +18,14 @@ exports.getWishlist = catchAsync(async (req, res, next) => {
 })
 
 exports.addWishlist = catchAsync(async (req, res, next) => {
-    if (req.body.wishlist == null) {
+    if (req.body.product == null) {
         return next(new AppError('No item to add', 400))
     }
 
     const user = await User.findByIdAndUpdate(
         req.user._id,
         {
-            wishlist: [...req.user.wishlist, req.body.wishlist],
+            wishlist: [...req.user.wishlist, { item: req.body.product, addedAt: Date.now() }],
         },
         {
             new: true,
@@ -46,10 +46,12 @@ exports.addWishlist = catchAsync(async (req, res, next) => {
 })
 
 exports.removeWishlist = catchAsync(async (req, res, next) => {
+    const newWishlist = req.body.wishlist.filter((item) => item.item !== req.body.product)
+
     const user = await User.findByIdAndUpdate(
         req.user._id,
         {
-            wishlist: req.user.wishlist.filter((item) => item._id != req.body.wishlist),
+            wishlist: newWishlist,
         },
         {
             new: true,

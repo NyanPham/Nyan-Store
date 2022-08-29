@@ -19,9 +19,11 @@ router.use('/myOrders', orderRouter)
 
 // On client
 router.get('/isLoggedIn', authController.isLoggedIn)
-router.get('/myWishlist', authController.protect, wishlistController.getWishlist)
-router.patch('/addWishlist', authController.protect, wishlistController.addWishlist)
-router.patch('/removeWishlist', authController.protect, wishlistController.removeWishlist)
+router
+    .route('/myWishlist')
+    .get(authController.protect, wishlistController.getWishlist)
+    .patch(authController.protect, wishlistController.addWishlist)
+    .delete(authController.protect, wishlistController.removeWishlist)
 
 // Authentication
 router.post('/signUp', authController.signUp)
