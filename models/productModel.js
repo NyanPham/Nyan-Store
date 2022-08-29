@@ -65,13 +65,17 @@ const productSchema = new mongoose.Schema(
             default: Date.now(),
         },
         inventory: Number,
-        bidding: {
-            onBidding: {
-                type: Boolean,
-                default: false,
+        isAuctioned: {
+            type: Boolean,
+            default: false,
+            validate: {
+                validator: function () {
+                    return this.biddingExpiresIn !== null
+                },
+                message: 'Auctioned product must have an expire date.',
             },
-            biddingExpiresIn: Date,
         },
+        auctionExpiresIn: Date,
     },
     {
         toObject: { virtuals: true },
