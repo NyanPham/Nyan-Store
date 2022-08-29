@@ -13,9 +13,7 @@ const constructQueryFilter = (obj) => {
     }
 
     if (categoryId) {
-        filterObj.categories = {
-            $in: categoryId,
-        }
+        filterObj.category = categoryId
     }
 
     if (user) {

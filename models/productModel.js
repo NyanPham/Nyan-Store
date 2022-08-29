@@ -49,12 +49,10 @@ const productSchema = new mongoose.Schema(
             unique: [true, 'A product SKU must be unique'],
         },
         slug: String,
-        categories: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: 'Category',
-            },
-        ],
+        category: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Category',
+        },
         collections: [
             {
                 type: mongoose.Schema.ObjectId,
@@ -83,6 +81,16 @@ const productSchema = new mongoose.Schema(
 
 productSchema.index({
     name: 1,
+})
+
+productSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'category',
+    }).populate({
+        path: 'collections',
+    })
+
+    next()
 })
 
 productSchema.pre('save', function (next) {
