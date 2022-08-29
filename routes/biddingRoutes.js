@@ -6,12 +6,12 @@ const router = express.Router({ mergeParams: true })
 
 router
     .route('/')
-    .get(authController.protect, biddingController.getProductAndUserIds, biddingController.getAllBiddings)
-    .post(biddingController.createBidding)
+    .get(biddingController.getProductAndUserIds, biddingController.getAllBiddings)
+    .post(authController.protect, biddingController.createBidding)
 router
     .route('/:id')
     .get(biddingController.getBidding)
-    .patch(biddingController.updateBidding)
-    .delete(biddingController.deleteBidding)
+    .patch(authController.protect, authController.restrictTo('admin'), biddingController.updateBidding)
+    .delete(authController.protect, authController.restrictTo('admin'), biddingController.deleteBidding)
 
 module.exports = router

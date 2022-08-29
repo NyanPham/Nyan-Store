@@ -9,12 +9,12 @@ router.use('/:productId/bidding', biddingRouter)
 
 router
     .route('/')
-    .get(authController.protect, productController.getCollectionAndCategoryIds, productController.getAllProducts)
-    .post(productController.createProducts)
+    .get(productController.getCollectionAndCategoryIds, productController.getAllProducts)
+    .post(authController.protect, authController.restrictTo('admin'), productController.createProducts)
 router
     .route('/:id')
     .get(productController.getProduct)
-    .patch(productController.updateProduct)
-    .delete(productController.deleteProduct)
+    .patch(authController.protect, authController.restrictTo('admin'), productController.updateProduct)
+    .delete(authController.protect, authController.restrictTo('admin'), productController.deleteProduct)
 
 module.exports = router
