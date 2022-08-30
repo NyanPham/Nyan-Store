@@ -14,6 +14,11 @@ exports.getProductAndUserIds = (req, res, next) => {
     next()
 }
 
+exports.getUserToBid = (req, res, next) => {
+    if (req.user) req.body.user = req.user._id
+    next()
+}
+
 exports.getAllBiddings = factory.getAll(Bidding)
 exports.createBidding = factory.createOne(Bidding)
 exports.getBidding = factory.getOne(Bidding)

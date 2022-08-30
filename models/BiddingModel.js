@@ -6,6 +6,10 @@ const biddingSchema = new mongoose.Schema({
         ref: 'Product',
         required: true,
     },
+    variant: {
+        type: mongoose.Schema.ObjectId,
+        required: true,
+    },
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
@@ -22,6 +26,7 @@ const biddingSchema = new mongoose.Schema({
     price: {
         type: Number,
         default: 0,
+        min: [0],
     },
 })
 

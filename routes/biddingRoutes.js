@@ -7,7 +7,7 @@ const router = express.Router({ mergeParams: true })
 router
     .route('/')
     .get(biddingController.getProductAndUserIds, biddingController.getAllBiddings)
-    .post(authController.protect, biddingController.createBidding)
+    .post(authController.protect, biddingController.getUserToBid, biddingController.createBidding)
 router
     .route('/:id')
     .get(biddingController.getBidding)
