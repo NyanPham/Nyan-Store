@@ -7,6 +7,8 @@ const router = express.Router({ mergeParams: true })
 
 router.use('/:productId/bidding', biddingRouter)
 
+router.get('/filterFacets', productController.getFilterFacets)
+
 router
     .route('/')
     .get(productController.getCollectionAndCategoryIds, productController.getAllProducts)
