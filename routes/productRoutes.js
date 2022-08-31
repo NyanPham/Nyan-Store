@@ -9,6 +9,7 @@ router.use('/:productId/bidding', biddingRouter)
 
 router.get('/filterFacets', productController.getFilterFacets)
 router.post('/filter', productController.filterProducts)
+router.get('/slug/:slug', productController.getProductFromSlug)
 
 router
     .route('/')

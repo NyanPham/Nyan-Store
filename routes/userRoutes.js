@@ -2,6 +2,7 @@ const express = require('express')
 const authController = require('../controllers/authController')
 const userController = require('../controllers/userController')
 const wishlistController = require('../controllers/wishlistController')
+const cartController = require('../controllers/cartController')
 const biddingRouter = require('./biddingRoutes')
 const orderRouter = require('./orderRoutes')
 
@@ -39,6 +40,10 @@ router.get('/logOut', authController.logOut)
 router.get('/me', userController.getMe, userController.getUser)
 router.patch('/updateMe', userController.updateMe)
 router.delete('/deleteMe', userController.deleteMe)
+router.patch('/addToMyCart', cartController.addToMyCart)
+router.get('/getMyCart', cartController.getMyCart)
+router.patch('/updateMyCart', cartController.updateMyCart)
+router.patch('/removeMyCart', cartController.removeMyCart)
 
 // User data routes
 router.use(authController.restrictTo('admin'))

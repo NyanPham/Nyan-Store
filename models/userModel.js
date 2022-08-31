@@ -34,10 +34,14 @@ const userSchema = new mongoose.Schema(
         },
         cart: [
             {
-                productId: {
+                product: {
                     type: mongoose.Schema.ObjectId,
                     ref: 'Product',
                     required: [true, 'A cart item must have a product ID'],
+                },
+                variant: {
+                    type: Object,
+                    required: true,
                 },
                 option1: String,
                 option2: String,
@@ -47,6 +51,11 @@ const userSchema = new mongoose.Schema(
                     required: [true, 'A cart item must have a quantity'],
                     min: [1, 'An item must have at least 1 unit in cart'],
                 },
+                addedAt: {
+                    type: Date,
+                    default: Date.now(),
+                },
+                updatedAt: Date,
             },
         ],
         orders: Array,

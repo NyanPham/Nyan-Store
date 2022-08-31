@@ -15,8 +15,6 @@ class APIFeatures {
         const parsedQueryObj = JSON.parse(queryString)
         APIFeatures.checkBooleanValue(parsedQueryObj)
 
-        console.log(parsedQueryObj)
-
         this.query.find(parsedQueryObj)
 
         return this

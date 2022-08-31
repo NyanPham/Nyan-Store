@@ -46,6 +46,17 @@ exports.getProduct = factory.getOne(Product)
 exports.updateProduct = factory.updateOne(Product)
 exports.deleteProduct = factory.deleteOne(Product)
 
+exports.getProductFromSlug = catchAsync(async (req, res, next) => {
+    const tour = await Product.findOne({ slug: req.params.slug })
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            doc: tour,
+        },
+    })
+})
+
 exports.getFilterFacets = catchAsync(async (req, res, next) => {
     const facetOne = Product.aggregate([
         {

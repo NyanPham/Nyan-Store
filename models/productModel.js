@@ -77,6 +77,20 @@ const productSchema = new mongoose.Schema(
             },
         },
         auctionExpiresIn: Date,
+        reviews: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: 'Review',
+            },
+        ],
+        ratingsAverage: {
+            type: Number,
+            default: 4.5,
+        },
+        ratingsQuantity: {
+            type: Number,
+            default: 0,
+        },
     },
     {
         toObject: { virtuals: true },
