@@ -4,6 +4,35 @@ const APIFeatures = require('../utils/apiFeatures')
 const factory = require('./factoryHandler')
 const catchAsync = require('../utils/catchAsync')
 
+const getSortBy = (sortTerm) => {
+    switch (sortTerm) {
+        case 'oldest':
+            return {
+                createdAt: 1,
+            }
+        case 'latest':
+            return {
+                createdAt: -1,
+            }
+        case 'price-up':
+            return {
+                price: 1,
+            }
+        case 'price-down':
+            return {
+                price: -1,
+            }
+        case 'alphabet':
+            return {
+                name: 1,
+            }
+        default:
+            return {
+                createdAt: 1,
+            }
+    }
+}
+
 exports.getCollectionAndCategoryIds = (req, res, next) => {
     if (req.params.collectionId) req.body.collectionId = req.params.collectionId
     if (req.params.categoryId) req.body.categoryId = req.params.categoryId
@@ -101,6 +130,36 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
                         },
                     },
                 ],
+                maxPrice: [
+                    {
+                        $sort: {
+                            maxPrice: -1,
+                        },
+                    },
+                    {
+                        $limit: 1,
+                    },
+                    {
+                        $project: {
+                            maxPrice: 1,
+                        },
+                    },
+                ],
+                minPrice: [
+                    {
+                        $sort: {
+                            min: 1,
+                        },
+                    },
+                    {
+                        $limit: 1,
+                    },
+                    {
+                        $project: {
+                            minPrice: 1,
+                        },
+                    },
+                ],
             },
         },
     ])
@@ -116,25 +175,10 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
 })
 
 exports.filterProducts = catchAsync(async (req, res, next) => {
-    const { size, color, material, brand } = req.body.filterQuery
+    const { size, color, material, brand, maxPrice, minPrice, skip, limit, sortBy, categoryId } = req.body.filterQuery
     const { allSize, allColor, allMaterial, allBrand } = req.body.all
-    const { skip, limit } = req.body
 
-    // const products = await Product.aggregate([
-    //     {
-    //         $filter: {
-    //             input: '$variants',
-    //             as: 'variant',
-    //             cond: {
-    //                 $elemMatch: {
-    //                     option1: {
-    //                         $in: size,
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //     },
-    // ])
+    const sortByObj = getSortBy(sortBy)
 
     const products = await Product.find({
         variants: {
@@ -155,12 +199,23 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
                             $in: material?.length ? material : allMaterial,
                         },
                     },
+                    {
+                        price: {
+                            $lte: maxPrice,
+                            $gte: minPrice,
+                        },
+                    },
                 ],
             },
         },
+        vendor: {
+            $in: brand.length ? brand : allBrand,
+        },
+        category: categoryId,
     })
         .skip(skip)
         .limit(limit)
+        .sort(sortByObj)
 
     res.status(200).json({
         status: 'success',

@@ -13,6 +13,7 @@ const productSchema = new mongoose.Schema(
             type: String,
             default: 'Unknown',
         },
+        price: Number,
         images: [String],
         description: String,
         summary: {
@@ -85,6 +86,8 @@ const productSchema = new mongoose.Schema(
 
 productSchema.index({
     name: 1,
+    createdAt: -1,
+    price: -1,
 })
 
 productSchema.pre(/^find/, function (next) {
@@ -107,6 +110,8 @@ productSchema.pre('save', function (next) {
         if (variant.price >= min) return min
         return variant.price
     }, this.variants[0].price)
+
+    this.price = this.variants[0].price
 
     next()
 })
