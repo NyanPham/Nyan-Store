@@ -21,7 +21,7 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
     const facetOne = Product.aggregate([
         {
             $facet: {
-                sizes: [
+                size: [
                     {
                         $unwind: '$variants',
                     },
@@ -42,7 +42,7 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
                         },
                     },
                 ],
-                colors: [
+                color: [
                     {
                         $unwind: '$variants',
                     },
@@ -63,7 +63,7 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
                         },
                     },
                 ],
-                materials: [
+                material: [
                     {
                         $unwind: '$variants',
                     },
@@ -84,7 +84,7 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
                         },
                     },
                 ],
-                brands: [
+                brand: [
                     {
                         $group: {
                             _id: '$vendor',
@@ -105,56 +105,68 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
         },
     ])
 
-    // const facetTwo = Product.aggregate([
-    //     {
-    //         $unwind: '$variants',
-    //     },
-    //     {
-    //         $group: {
-    //             _id: '$variants.option2',
-    //             variants: { $push: '$variants._id' },
-    //         },
-    //     },
-    //     {
-    //         $addFields: {
-    //             color: '$_id',
-    //         },
-    //     },
-    //     {
-    //         $project: {
-    //             _id: 0,
-    //         },
-    //     },
-    // ])
-
-    // const facetThree = Product.aggregate([
-    //     {
-    //         $unwind: '$variants',
-    //     },
-    //     {
-    //         $group: {
-    //             _id: '$variants.option3',
-    //             variants: { $push: '$variants._id' },
-    //         },
-    //     },
-    //     {
-    //         $addFields: {
-    //             material: '$_id',
-    //         },
-    //     },
-    //     {
-    //         $project: {
-    //             _id: 0,
-    //         },
-    //     },
-    // ])
-
     const facets = await Promise.all([facetOne])
 
     res.status(200).json({
         status: 'success',
         data: {
             facets,
+        },
+    })
+})
+
+exports.filterProducts = catchAsync(async (req, res, next) => {
+    const { size, color, material, brand } = req.body.filterQuery
+    const { allSize, allColor, allMaterial, allBrand } = req.body.all
+    const { skip, limit } = req.body
+
+    // const products = await Product.aggregate([
+    //     {
+    //         $filter: {
+    //             input: '$variants',
+    //             as: 'variant',
+    //             cond: {
+    //                 $elemMatch: {
+    //                     option1: {
+    //                         $in: size,
+    //                     },
+    //                 },
+    //             },
+    //         },
+    //     },
+    // ])
+
+    const products = await Product.find({
+        variants: {
+            $elemMatch: {
+                $and: [
+                    {
+                        option1: {
+                            $in: size?.length ? size : allSize,
+                        },
+                    },
+                    {
+                        option2: {
+                            $in: color?.length ? color : allColor,
+                        },
+                    },
+                    {
+                        option3: {
+                            $in: material?.length ? material : allMaterial,
+                        },
+                    },
+                ],
+            },
+        },
+    })
+        .skip(skip)
+        .limit(limit)
+
+    res.status(200).json({
+        status: 'success',
+        results: products.length,
+        data: {
+            products,
         },
     })
 })

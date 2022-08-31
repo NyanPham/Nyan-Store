@@ -10,10 +10,12 @@ class APIFeatures {
         excludedFields.forEach((field) => delete queryObjClone[field])
 
         let queryString = JSON.stringify(queryObjClone)
-        queryString = queryString.replace(/\b(gt|gte|le|lte|elemMatch)\b/g, (match) => `$${match}`)
+        queryString = queryString.replace(/\b(gt|gte|le|lte|elemMatch|in)\b/g, (match) => `$${match}`)
 
         const parsedQueryObj = JSON.parse(queryString)
         APIFeatures.checkBooleanValue(parsedQueryObj)
+
+        console.log(parsedQueryObj)
 
         this.query.find(parsedQueryObj)
 
