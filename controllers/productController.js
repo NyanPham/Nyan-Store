@@ -7,29 +7,17 @@ const catchAsync = require('../utils/catchAsync')
 const getSortBy = (sortTerm) => {
     switch (sortTerm) {
         case 'oldest':
-            return {
-                createdAt: 1,
-            }
+            return 'createdAt=1'
         case 'latest':
-            return {
-                createdAt: -1,
-            }
+            return 'createdAt=-1'
         case 'price-up':
-            return {
-                price: 1,
-            }
+            return 'price=1'
         case 'price-down':
-            return {
-                price: -1,
-            }
+            return 'price=-1'
         case 'alphabet':
-            return {
-                name: 1,
-            }
+            return 'name=1'
         default:
-            return {
-                createdAt: 1,
-            }
+            return ''
     }
 }
 
@@ -185,54 +173,47 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
     })
 })
 
-exports.filterProducts = catchAsync(async (req, res, next) => {
-    const { size, color, material, brand, maxPrice, minPrice, skip, limit, sortBy, categoryId } = req.body.filterQuery
+exports.filterProducts = (req, res, next) => {
+    const { size, color, material, brand, maxPrice, minPrice, skip, limit, sortByTerm, categoryId } =
+        req.body.filterQuery
     const { allSize, allColor, allMaterial, allBrand } = req.body.all
 
-    const sortByObj = getSortBy(sortBy)
+    const sortBy = getSortBy(sortByTerm)
+    req.query.sort = sortBy
+    req.query.skip = skip
 
-    const products = await Product.find({
-        variants: {
-            $elemMatch: {
-                $and: [
-                    {
-                        option1: {
-                            $in: size?.length ? size : allSize,
-                        },
+    req.query.variants = {
+        elemMatch: {
+            and: [
+                {
+                    option1: {
+                        in: size?.length ? size : allSize,
                     },
-                    {
-                        option2: {
-                            $in: color?.length ? color : allColor,
-                        },
+                },
+                {
+                    option2: {
+                        in: color?.length ? color : allColor,
                     },
-                    {
-                        option3: {
-                            $in: material?.length ? material : allMaterial,
-                        },
+                },
+                {
+                    option3: {
+                        in: material?.length ? material : allMaterial,
                     },
-                    {
-                        price: {
-                            $lte: maxPrice,
-                            $gte: minPrice,
-                        },
+                },
+                {
+                    price: {
+                        lte: maxPrice,
+                        gte: minPrice,
                     },
-                ],
-            },
+                },
+            ],
         },
-        vendor: {
-            $in: brand.length ? brand : allBrand,
-        },
-        category: categoryId,
-    })
-        .skip(skip)
-        .limit(limit)
-        .sort(sortByObj)
+    }
+    req.query.vendor = {
+        in: brand?.length ? brand : allBrand,
+    }
+    req.query.category = categoryId
+    req.body.categoryId = categoryId
 
-    res.status(200).json({
-        status: 'success',
-        results: products.length,
-        data: {
-            products,
-        },
-    })
-})
+    next()
+}
