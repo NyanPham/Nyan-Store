@@ -17,6 +17,7 @@ const categoryRouter = require('./routes/categoryRoutes')
 const biddingRouter = require('./routes/biddingRoutes')
 const orderRouter = require('./routes/orderRoutes')
 const couponRouter = require('./routes/couponRoutes')
+const countryRouter = require('./routes/countryRoutes')
 
 const app = express()
 
@@ -67,6 +68,7 @@ app.use('/api/v1/categories', categoryRouter)
 app.use('/api/v1/bidding', biddingRouter)
 app.use('/api/v1/orders', orderRouter)
 app.use('/api/v1/coupons', couponRouter)
+app.use('/api/v1/countries', countryRouter)
 
 app.use('*', (req, res, next) => {
     next(new AppError(`No routes found at ${req.originalUrl}`, 400))
