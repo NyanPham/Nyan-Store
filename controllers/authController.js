@@ -16,7 +16,7 @@ const signAndSendToken = (user, res, statusCode) => {
     const token = signToken(user._id)
     const cookieOptions = {
         httpOnly: true,
-        expires: new Date(Date.now() + 10 * 60 * 1000),
+        expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
         secure: false,
     }
 
