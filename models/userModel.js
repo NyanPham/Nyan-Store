@@ -58,6 +58,13 @@ const userSchema = new mongoose.Schema(
                 updatedAt: Date,
             },
         ],
+        cartNote: String,
+        appliedCoupons: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: 'Coupon',
+            },
+        ],
         orders: Array,
         passwordChangedAt: Date,
         resetPasswordToken: String,
