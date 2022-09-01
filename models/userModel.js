@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema(
                 updatedAt: Date,
             },
         ],
-        cartNote: String,
+        orderNote: String,
         appliedCoupons: [
             {
                 type: mongoose.Schema.ObjectId,

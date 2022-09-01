@@ -44,6 +44,7 @@ router.patch('/addToMyCart', cartController.addToMyCart)
 router.get('/getMyCart', cartController.getMyCart)
 router.patch('/updateMyCart', cartController.updateMyCart)
 router.patch('/removeMyCart', cartController.removeMyCart)
+router.route('/myNote').get(userController.getOrderNote).patch(userController.updateOrderNote)
 
 // User data routes
 router.use(authController.restrictTo('admin'))

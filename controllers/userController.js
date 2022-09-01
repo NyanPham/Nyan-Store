@@ -49,6 +49,37 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     })
 })
 
+exports.updateOrderNote = catchAsync(async (req, res, next) => {
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            orderNote: req.body.orderNote,
+        },
+        {
+            new: true,
+            runValidators: true,
+        }
+    )
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            orderNote: user.orderNote,
+        },
+    })
+})
+
+exports.getOrderNote = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.user._id)
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            orderNote: user.orderNote,
+        },
+    })
+})
+
 exports.getAllUsers = factory.getAll(User)
 exports.getUser = factory.getOne(User)
 exports.updateUser = factory.updateOne(User)
