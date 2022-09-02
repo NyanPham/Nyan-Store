@@ -29,10 +29,13 @@ exports.getCollectionAndCategoryIds = (req, res, next) => {
 }
 
 exports.filterProducts = (req, res, next) => {
-    const { size, color, material, brand, maxPrice, minPrice, skip, limit, sortByTerm, categoryId } =
+    const { size, color, material, brand, maxPrice, minPrice, skip, limit, sortByTerm, categoryId, searchTerm } =
         req.body.filterQuery
     const { allSize, allColor, allMaterial, allBrand } = req.body.all
-
+    const searchRegexObj = {
+        regex: `^${searchTerm}`,
+        options: 'mix',
+    }
     const sortBy = getSortBy(sortByTerm)
     req.query.sort = sortBy
     req.query.skip = skip
@@ -42,17 +45,17 @@ exports.filterProducts = (req, res, next) => {
             and: [
                 {
                     option1: {
-                        in: size?.length ? size : allSize,
+                        in: size?.length ? size : allSize || [],
                     },
                 },
                 {
                     option2: {
-                        in: color?.length ? color : allColor,
+                        in: color?.length ? color : allColor || [],
                     },
                 },
                 {
                     option3: {
-                        in: material?.length ? material : allMaterial,
+                        in: material?.length ? material : allMaterial || [],
                     },
                 },
                 {
@@ -61,12 +64,35 @@ exports.filterProducts = (req, res, next) => {
                         gte: minPrice,
                     },
                 },
+                {
+                    $or: [
+                        {
+                            name: searchRegexObj,
+                        },
+                    ],
+                },
             ],
         },
     }
+
     req.query.vendor = {
-        in: brand?.length ? brand : allBrand,
+        in: brand?.length ? brand : allBrand || [],
     }
+
+    req.query.or = [
+        {
+            name: searchRegexObj,
+        },
+        {
+            vendor: searchRegexObj,
+        },
+        {
+            tags: searchRegexObj,
+        },
+        {
+            SKU: searchRegexObj,
+        },
+    ]
     req.query.category = categoryId
     req.body.categoryId = categoryId
 

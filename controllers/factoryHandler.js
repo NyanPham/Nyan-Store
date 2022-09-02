@@ -36,6 +36,8 @@ exports.getAll = (Model) => {
 
         const docs = await features.query
 
+        console.log(docs.length)
+
         res.status(200).json({
             status: 'success',
             results: docs.length,
