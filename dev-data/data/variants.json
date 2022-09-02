@@ -1,0 +1,265 @@
+[
+    {
+        "name": "Nike 1",
+        "option1": "SM",
+        "option2": "Blue",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 340,
+        "inventory": 28,
+        "product": "630b2741484bbf1a0d11bce6"
+    },
+    {
+        "name": "Nike 2",
+        "option1": "M",
+        "option2": "Blue",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 340,
+        "inventory": 28,
+        "product": "630b2741484bbf1a0d11bce6"
+    },
+    {
+        "name": "Nike 3",
+        "option1": "L",
+        "option2": "Blue",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 340,
+        "inventory": 28,
+        "product": "630b2741484bbf1a0d11bce6"
+    },
+    {
+        "name": "Nike 4",
+        "option1": "M",
+        "option2": "Green",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 340,
+        "inventory": 28,
+        "product": "630b2741484bbf1a0d11bce6"
+    },
+    {
+        "name": "Nike 5",
+        "option1": "XL",
+        "option2": "Green",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 340,
+        "inventory": 28,
+        "product": "630b2741484bbf1a0d11bce6"
+    },
+    {
+        "name": "Nike 6",
+        "option1": "XXL",
+        "option2": "Green",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 340,
+        "inventory": 28,
+        "product": "630b2741484bbf1a0d11bce6"
+    },
+    {
+        "name": "Wasan 1",
+        "option1": "SM",
+        "option2": "Blue",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 123,
+        "inventory": 54,
+        "product": "630b2741484bbf1a0d11bce8"
+    },
+    {
+        "name": "Wasan 2",
+        "option1": "M",
+        "option2": "Red",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 65,
+        "inventory": 343,
+        "product": "630b2741484bbf1a0d11bce8"
+    },
+    {
+        "name": "Wasan 3",
+        "option1": "L",
+        "option2": "Blue",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 324,
+        "inventory": 54,
+        "product": "630b2741484bbf1a0d11bce8"
+    },
+    {
+        "name": "Wasan 4",
+        "option1": "M",
+        "option2": "Blue",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 1245,
+        "inventory": 53,
+        "product": "630b2741484bbf1a0d11bce8"
+    },
+    {
+        "name": "Wasan 5",
+        "option1": "XL",
+        "option2": "Green",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 340,
+        "comparePrice": 500,
+        "inventory": 432,
+        "product": "630b2741484bbf1a0d11bce8"
+    },
+    {
+        "name": "Wasan 6",
+        "option1": "XXL",
+        "option2": "Red",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 123,
+        "comparePrice": 200,
+        "inventory": 5,
+        "product": "630b2741484bbf1a0d11bce8"
+    },
+    {
+        "name": "Uit 1",
+        "option1": "XL",
+        "option2": "Green",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 730,
+        "inventory": 132,
+        "product": "630b2741484bbf1a0d11bcee"
+    },
+    {
+        "name": "Uit 2",
+        "option1": "XXL",
+        "option2": "Red",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 354,
+        "comparePrice": 600,
+        "inventory": 5,
+        "product": "630b2741484bbf1a0d11bcee"
+    },
+    {
+        "name": "Uit 3",
+        "option1": "XXL",
+        "option2": "Blue",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 354,
+        "comparePrice": 600,
+        "inventory": 5,
+        "product": "630b2741484bbf1a0d11bcee"
+    },
+    {
+        "name": "Asui 1",
+        "option1": "XL",
+        "option2": "Green",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 730,
+        "inventory": 800,
+        "product": "630b2741484bbf1a0d11bcf4"
+    },
+    {
+        "name": "Asui 2",
+        "option1": "XXL",
+        "option2": "Yellow",
+        "option3": "Fabric",
+        "images": ["image-3", "image-4"],
+        "price": 234,
+        "comparePrice": 600,
+        "inventory": 5,
+        "product": "630b2741484bbf1a0d11bcf4"
+    },
+    {
+        "name": "Asui 3",
+        "option1": "L",
+        "option2": "Yellow",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 654,
+        "comparePrice": 700,
+        "inventory": 5,
+        "product": "630b2741484bbf1a0d11bcf4"
+    },
+    {
+        "name": "Tuas 1",
+        "option1": "M",
+        "option2": "Blue",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 654,
+        "comparePrice": 700,
+        "inventory": 5,
+        "product": "630b2741484bbf1a0d11bcfe"
+    },
+    {
+        "name": "Tuas 2",
+        "option1": "L",
+        "option2": "Blue",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 654,
+        "comparePrice": 700,
+        "inventory": 5,
+        "product": "630b2741484bbf1a0d11bcfe"
+    },
+    {
+        "name": "Tuas 3",
+        "option1": "M",
+        "option2": "Blue",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 254,
+        "comparePrice": 600,
+        "inventory": 5,
+        "product": "630b2741484bbf1a0d11bcfe"
+    },
+    {
+        "name": "Nsys 1",
+        "option1": "M",
+        "option2": "Blue",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 554,
+        "comparePrice": 600,
+        "inventory": 5,
+        "product": "630cdfd44a354647f16c10df"
+    },
+    {
+        "name": "Nsys 2",
+        "option1": "M",
+        "option2": "Yellow",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 554,
+        "comparePrice": 600,
+        "inventory": 5,
+        "product": "630cdfd44a354647f16c10df"
+    },
+    {
+        "name": "Dues 1",
+        "option1": "L",
+        "option2": "White",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 554,
+        "comparePrice": 600,
+        "inventory": 5,
+        "product": "630dd4250ec0526ac1d8fe03"
+    },
+    {
+        "name": "Dues 2",
+        "option1": "M",
+        "option2": "Yellow",
+        "option3": "Rubber",
+        "images": ["image-3", "image-4"],
+        "price": 554,
+        "comparePrice": 600,
+        "inventory": 5,
+        "product": "630dd4250ec0526ac1d8fe03"
+    }
+]
