@@ -7,15 +7,15 @@ const catchAsync = require('../utils/catchAsync')
 const getSortBy = (sortTerm) => {
     switch (sortTerm) {
         case 'oldest':
-            return 'createdAt=1'
+            return 'createdAt'
         case 'latest':
-            return 'createdAt=-1'
+            return '-createdAt'
         case 'price-up':
-            return 'price=1'
+            return 'minPrice,maxPrice,price'
         case 'price-down':
-            return 'price=-1'
+            return '-minPrice,-price'
         case 'alphabet':
-            return 'name=1'
+            return 'name'
         default:
             return ''
     }
@@ -28,11 +28,52 @@ exports.getCollectionAndCategoryIds = (req, res, next) => {
     next()
 }
 
-exports.getAllProducts = factory.getAll(Product)
-exports.createProducts = factory.createOne(Product)
-exports.getProduct = factory.getOne(Product)
-exports.updateProduct = factory.updateOne(Product)
-exports.deleteProduct = factory.deleteOne(Product)
+exports.filterProducts = (req, res, next) => {
+    const { size, color, material, brand, maxPrice, minPrice, skip, limit, sortByTerm, categoryId } =
+        req.body.filterQuery
+    const { allSize, allColor, allMaterial, allBrand } = req.body.all
+
+    const sortBy = getSortBy(sortByTerm)
+    req.query.sort = sortBy
+    req.query.skip = skip
+
+    req.query.variants = {
+        elemMatch: {
+            and: [
+                {
+                    option1: {
+                        in: size?.length ? size : allSize,
+                    },
+                },
+                {
+                    option2: {
+                        in: color?.length ? color : allColor,
+                    },
+                },
+                {
+                    option3: {
+                        in: material?.length ? material : allMaterial,
+                    },
+                },
+                {
+                    price: {
+                        lte: maxPrice,
+                        gte: minPrice,
+                    },
+                },
+            ],
+        },
+    }
+    req.query.vendor = {
+        in: brand?.length ? brand : allBrand,
+    }
+    req.query.category = categoryId
+    req.body.categoryId = categoryId
+
+    console.log(req.query.vendor)
+
+    next()
+}
 
 exports.getProductFromSlug = catchAsync(async (req, res, next) => {
     const tour = await Product.findOne({ slug: req.params.slug })
@@ -173,47 +214,8 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
     })
 })
 
-exports.filterProducts = (req, res, next) => {
-    const { size, color, material, brand, maxPrice, minPrice, skip, limit, sortByTerm, categoryId } =
-        req.body.filterQuery
-    const { allSize, allColor, allMaterial, allBrand } = req.body.all
-
-    const sortBy = getSortBy(sortByTerm)
-    req.query.sort = sortBy
-    req.query.skip = skip
-
-    req.query.variants = {
-        elemMatch: {
-            and: [
-                {
-                    option1: {
-                        in: size?.length ? size : allSize,
-                    },
-                },
-                {
-                    option2: {
-                        in: color?.length ? color : allColor,
-                    },
-                },
-                {
-                    option3: {
-                        in: material?.length ? material : allMaterial,
-                    },
-                },
-                {
-                    price: {
-                        lte: maxPrice,
-                        gte: minPrice,
-                    },
-                },
-            ],
-        },
-    }
-    req.query.vendor = {
-        in: brand?.length ? brand : allBrand,
-    }
-    req.query.category = categoryId
-    req.body.categoryId = categoryId
-
-    next()
-}
+exports.getAllProducts = factory.getAll(Product)
+exports.createProducts = factory.createOne(Product)
+exports.getProduct = factory.getOne(Product)
+exports.updateProduct = factory.updateOne(Product)
+exports.deleteProduct = factory.deleteOne(Product)
