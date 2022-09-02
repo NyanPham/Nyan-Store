@@ -70,8 +70,6 @@ exports.filterProducts = (req, res, next) => {
     req.query.category = categoryId
     req.body.categoryId = categoryId
 
-    console.log(req.query.vendor)
-
     next()
 }
 

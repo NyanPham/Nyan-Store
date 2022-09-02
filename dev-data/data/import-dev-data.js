@@ -5,7 +5,6 @@ const Product = require('../../models/productModel')
 const User = require('../../models/userModel')
 const Collection = require('../../models/collectionModel')
 const Category = require('../../models/categoryModel')
-const Variant = require('../../models/variantModel')
 
 dotenv.config({ path: `${__dirname}/../../config.env` })
 const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
@@ -18,11 +17,10 @@ const variants = JSON.parse(fs.readFileSync(`${__dirname}/variants.json`, 'utf-8
 
 const importData = async () => {
     try {
-        // await Product.create(products)
+        await Product.create(products)
         // await User.create(users)
         // await Collection.create(collections)
         // await Category.create(categories)
-        await Variant.create(variants)
 
         console.log('Database is imported successfully')
     } catch (err) {
@@ -35,7 +33,7 @@ const importData = async () => {
 const deleteData = async () => {
     try {
         await Product.deleteMany()
-        await User.deleteMany()
+        // await User.deleteMany()
         // await Collection.deleteMany()
         // await Category.deleteMany()
 

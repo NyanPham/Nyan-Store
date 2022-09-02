@@ -15,6 +15,60 @@
                 "price": 240,
                 "oldPrice": 300,
                 "inventory": 20
+            },
+            {
+                "name": "Nike 1",
+                "option1": "SM",
+                "option2": "Blue",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 340,
+                "inventory": 28
+            },
+            {
+                "name": "Nike 2",
+                "option1": "M",
+                "option2": "Blue",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 340,
+                "inventory": 28
+            },
+            {
+                "name": "Nike 3",
+                "option1": "L",
+                "option2": "Blue",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 340,
+                "inventory": 28
+            },
+            {
+                "name": "Nike 4",
+                "option1": "M",
+                "option2": "Green",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 340,
+                "inventory": 28
+            },
+            {
+                "name": "Nike 5",
+                "option1": "XL",
+                "option2": "Green",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 340,
+                "inventory": 28
+            },
+            {
+                "name": "Nike 6",
+                "option1": "XXL",
+                "option2": "Green",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 340,
+                "inventory": 28
             }
         ],
         "SKU": "SHOE-20",
@@ -23,7 +77,7 @@
             "onBidding": false
         },
         "collections": ["630b26abce3f60a89b2738ef"],
-        "category": "630b26abce3f60a89b2738f7"
+        "category": "630b301cd060f1eff159b677"
     },
     {
         "name": "Shoes 2",
@@ -82,7 +136,7 @@
             "onBidding": false
         },
         "collections": ["630b26abce3f60a89b2738f0"],
-        "category": "630b26abce3f60a89b2738f7"
+        "category": "630b301cd060f1eff159b677"
     },
     {
         "name": "Shoes 3",
@@ -141,7 +195,7 @@
             "onBidding": false
         },
         "collections": ["630b26abce3f60a89b2738f1"],
-        "category": "630b26abce3f60a89b2738f7"
+        "category": "630b301cd060f1eff159b677"
     },
     {
         "name": "Shoes 4",
@@ -236,7 +290,7 @@
             "onBidding": false
         },
         "collections": ["630b26abce3f60a89b2738ef"],
-        "category": "630b26abce3f60a89b2738f7"
+        "category": "630b301cd060f1eff159b677"
     },
     {
         "name": "Shoes 5",
@@ -323,6 +377,62 @@
                 "price": 140,
                 "oldPrice": 300,
                 "inventory": 50
+            },
+            {
+                "name": "Wasan 1",
+                "option1": "SM",
+                "option2": "Blue",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 123,
+                "inventory": 54
+            },
+            {
+                "name": "Wasan 2",
+                "option1": "M",
+                "option2": "Red",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 65,
+                "inventory": 343
+            },
+            {
+                "name": "Wasan 3",
+                "option1": "L",
+                "option2": "Blue",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 324,
+                "inventory": 54
+            },
+            {
+                "name": "Wasan 4",
+                "option1": "M",
+                "option2": "Blue",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 1245,
+                "inventory": 53
+            },
+            {
+                "name": "Wasan 5",
+                "option1": "XL",
+                "option2": "Green",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 340,
+                "comparePrice": 500,
+                "inventory": 432
+            },
+            {
+                "name": "Wasan 6",
+                "option1": "XXL",
+                "option2": "Red",
+                "option3": "Fabric",
+                "images": ["image-3", "image-4"],
+                "price": 123,
+                "comparePrice": 200,
+                "inventory": 5
             }
         ],
         "SKU": "SHOE-25",
@@ -331,6 +441,6 @@
             "onBidding": false
         },
         "collections": ["630b26abce3f60a89b2738ef"],
-        "category": "630b26abce3f60a89b2738f7"
+        "category": "630b301cd060f1eff159b677"
     }
 ]
