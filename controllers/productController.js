@@ -29,8 +29,20 @@ exports.getCollectionAndCategoryIds = (req, res, next) => {
 }
 
 exports.filterProducts = (req, res, next) => {
-    const { size, color, material, brand, maxPrice, minPrice, skip, limit, sortByTerm, categoryId, searchTerm } =
-        req.body.filterQuery
+    const {
+        size,
+        color,
+        material,
+        brand,
+        maxPrice,
+        minPrice,
+        skip,
+        limit,
+        sortByTerm,
+        categoryId,
+        emptyCategory,
+        searchTerm,
+    } = req.body.filterQuery
     const { allSize, allColor, allMaterial, allBrand } = req.body.all
     const searchRegexObj = {
         regex: `^${searchTerm}`,
@@ -78,23 +90,26 @@ exports.filterProducts = (req, res, next) => {
     req.query.vendor = {
         in: brand?.length ? brand : allBrand || [],
     }
+    console.log(emptyCategory)
 
-    req.query.or = [
-        {
-            name: searchRegexObj,
-        },
-        {
-            vendor: searchRegexObj,
-        },
-        {
-            tags: searchRegexObj,
-        },
-        {
-            SKU: searchRegexObj,
-        },
-    ]
-    req.query.category = categoryId
-    req.body.categoryId = categoryId
+    if (searchTerm != null && emptyCategory) {
+        req.query.or = [
+            {
+                name: searchRegexObj,
+            },
+            {
+                vendor: searchRegexObj,
+            },
+            {
+                tags: searchRegexObj,
+            },
+            {
+                SKU: searchRegexObj,
+            },
+        ]
+    } else {
+        req.query.category = categoryId
+    }
 
     next()
 }
