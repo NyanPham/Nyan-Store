@@ -29,7 +29,7 @@ const signAndSendToken = (user, res, statusCode) => {
     })
 }
 
-const sendIsLoggedIn = (res, isLoggedIn) => {
+const sendIsLoggedIn = (res, isLoggedIn, currentUser = null) => {
     if (!isLoggedIn) {
         return res.status(400).json({
             status: 'fail',
@@ -40,6 +40,10 @@ const sendIsLoggedIn = (res, isLoggedIn) => {
     res.status(200).json({
         status: 'success',
         isLoggedIn,
+        currentUser: {
+            name: currentUser.name,
+            email: currentUser.email,
+        },
     })
 }
 
@@ -114,10 +118,11 @@ exports.protect = catchAsync(async (req, res, next) => {
 })
 
 exports.isLoggedIn = async (req, res, next) => {
+    let currentUser
     try {
         const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET)
 
-        const currentUser = await User.findById(decoded.id)
+        currentUser = await User.findById(decoded.id)
         if (currentUser == null) return sendIsLoggedIn(res, false)
 
         if (currentUser.changedPasswordAfter(decoded.iat)) {
@@ -127,7 +132,7 @@ exports.isLoggedIn = async (req, res, next) => {
         return sendIsLoggedIn(res, false)
     }
 
-    return sendIsLoggedIn(res, true)
+    return sendIsLoggedIn(res, true, currentUser)
 }
 
 exports.restrictTo = (...allowedRoles) => {

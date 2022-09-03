@@ -4,7 +4,7 @@ const APIFeatures = require('../utils/apiFeatures')
 const factory = require('./factoryHandler')
 const catchAsync = require('../utils/catchAsync')
 
-const getSortBy = (sortTerm) => {
+const createSortQuery = (sortTerm) => {
     switch (sortTerm) {
         case 'oldest':
             return 'createdAt'
@@ -21,38 +21,10 @@ const getSortBy = (sortTerm) => {
     }
 }
 
-exports.getCollectionAndCategoryIds = (req, res, next) => {
-    if (req.params.collectionId) req.body.collectionId = req.params.collectionId
-    if (req.params.categoryId) req.body.categoryId = req.params.categoryId
+const createVariantsQuery = (queryParams) => {
+    const { size, allSize, color, allColor, material, allMaterial, maxPrice, minPrice, searchRegexObj } = queryParams
 
-    next()
-}
-
-exports.filterProducts = (req, res, next) => {
-    const {
-        size,
-        color,
-        material,
-        brand,
-        maxPrice,
-        minPrice,
-        skip,
-        limit,
-        sortByTerm,
-        categoryId,
-        emptyCategory,
-        searchTerm,
-    } = req.body.filterQuery
-    const { allSize, allColor, allMaterial, allBrand } = req.body.all
-    const searchRegexObj = {
-        regex: `^${searchTerm}`,
-        options: 'mix',
-    }
-    const sortBy = getSortBy(sortByTerm)
-    req.query.sort = sortBy
-    req.query.skip = skip
-
-    req.query.variants = {
+    return {
         elemMatch: {
             and: [
                 {
@@ -86,27 +58,75 @@ exports.filterProducts = (req, res, next) => {
             ],
         },
     }
+}
 
-    req.query.vendor = {
-        in: brand?.length ? brand : allBrand || [],
+const createSearchRegexQuery = (searchRegex) => {
+    return [
+        {
+            name: searchRegex,
+        },
+        {
+            vendor: searchRegex,
+        },
+        {
+            tags: searchRegex,
+        },
+        {
+            SKU: searchRegex,
+        },
+    ]
+}
+
+const createVendorQuery = (vendor, allVendor) => {
+    return {
+        in: vendor?.length ? vendor : allVendor || [],
     }
-    console.log(emptyCategory)
+}
+
+exports.getCollectionAndCategoryIds = (req, res, next) => {
+    if (req.params.collectionId) req.body.collectionId = req.params.collectionId
+    if (req.params.categoryId) req.body.categoryId = req.params.categoryId
+
+    next()
+}
+
+exports.filterProducts = (req, res, next) => {
+    const {
+        size,
+        color,
+        material,
+        brand,
+        maxPrice,
+        minPrice,
+        skip,
+        limit,
+        sortByTerm,
+        categoryId,
+        emptyCategory,
+        searchTerm,
+    } = req.body.filterQuery
+    const { allSize, allColor, allMaterial, allBrand } = req.body.all
+    const searchRegexObj = {
+        regex: `^${searchTerm}`,
+        options: 'mix',
+    }
+
+    req.query.sort = createSortQuery(sortByTerm)
+    req.query.vendor = createVendorQuery(brand, allBrand)
+    req.query.variants = createVariantsQuery({
+        size,
+        allSize,
+        color,
+        allColor,
+        material,
+        allMaterial,
+        maxPrice,
+        minPrice,
+        searchRegexObj,
+    })
 
     if (searchTerm != null && emptyCategory) {
-        req.query.or = [
-            {
-                name: searchRegexObj,
-            },
-            {
-                vendor: searchRegexObj,
-            },
-            {
-                tags: searchRegexObj,
-            },
-            {
-                SKU: searchRegexObj,
-            },
-        ]
+        req.query.or = createSearchRegexQuery(searchRegexObj)
     } else {
         req.query.category = categoryId
     }
