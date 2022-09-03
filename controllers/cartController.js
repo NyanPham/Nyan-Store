@@ -1,6 +1,7 @@
 const Product = require('../models/productModel')
 const Variant = require('../models/variantModel')
 const User = require('../models/userModel')
+const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 
 const getVariantFromProduct = async (product, variant) => {
@@ -18,6 +19,9 @@ exports.addToMyCart = catchAsync(async (req, res, next) => {
     const { variant, product, quantity } = req.body
 
     const variantToAdd = await Variant.findById(variant)
+
+    if (req.user.cart.some((item) => item.variant._id == variantToAdd._id.toString()))
+        return next(new AppError('The product is already in your cart', 400))
 
     const cartItem = {
         quantity,
