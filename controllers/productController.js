@@ -1,4 +1,5 @@
 const Product = require('../models/productModel')
+const Variant = require('../models/variantModel')
 const AppError = require('../utils/appError')
 const APIFeatures = require('../utils/apiFeatures')
 const factory = require('./factoryHandler')
@@ -21,45 +22,6 @@ const createSortQuery = (sortTerm) => {
     }
 }
 
-const createVariantsQuery = (queryParams) => {
-    const { size, allSize, color, allColor, material, allMaterial, maxPrice, minPrice, searchRegexObj } = queryParams
-
-    return {
-        elemMatch: {
-            and: [
-                {
-                    option1: {
-                        in: size?.length ? size : allSize || [],
-                    },
-                },
-                {
-                    option2: {
-                        in: color?.length ? color : allColor || [],
-                    },
-                },
-                {
-                    option3: {
-                        in: material?.length ? material : allMaterial || [],
-                    },
-                },
-                {
-                    price: {
-                        lte: maxPrice,
-                        gte: minPrice,
-                    },
-                },
-                {
-                    $or: [
-                        {
-                            name: searchRegexObj,
-                        },
-                    ],
-                },
-            ],
-        },
-    }
-}
-
 const createSearchRegexQuery = (searchRegex) => {
     return [
         {
@@ -77,10 +39,8 @@ const createSearchRegexQuery = (searchRegex) => {
     ]
 }
 
-const createVendorQuery = (vendor, allVendor) => {
-    return {
-        in: vendor?.length ? vendor : allVendor || [],
-    }
+const filterOptionsIfAny = (options, allOptions) => {
+    return options?.length ? options : allOptions || []
 }
 
 exports.getCollectionAndCategoryIds = (req, res, next) => {
@@ -90,7 +50,7 @@ exports.getCollectionAndCategoryIds = (req, res, next) => {
     next()
 }
 
-exports.filterProducts = (req, res, next) => {
+exports.filterProducts = catchAsync(async (req, res, next) => {
     const {
         size,
         color,
@@ -104,35 +64,101 @@ exports.filterProducts = (req, res, next) => {
         categoryId,
         emptyCategory,
         searchTerm,
+        categoryName,
     } = req.body.filterQuery
     const { allSize, allColor, allMaterial, allBrand } = req.body.all
     const searchRegexObj = {
-        regex: `^${searchTerm}`,
-        options: 'mix',
+        $regex: `^${searchTerm}`,
+        $options: 'mix',
     }
 
-    req.query.sort = createSortQuery(sortByTerm)
-    req.query.vendor = createVendorQuery(brand, allBrand)
-    req.query.variants = createVariantsQuery({
-        size,
-        allSize,
-        color,
-        allColor,
-        material,
-        allMaterial,
-        maxPrice,
-        minPrice,
-        searchRegexObj,
+    const variantIds = await Variant.aggregate([
+        {
+            $match: {
+                option1: {
+                    $in: filterOptionsIfAny(size, allSize),
+                },
+                option2: {
+                    $in: filterOptionsIfAny(color, allColor),
+                },
+                option3: {
+                    $in: filterOptionsIfAny(material, allMaterial),
+                },
+                price: {
+                    $gte: minPrice,
+                    $lte: maxPrice,
+                },
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+            },
+        },
+    ])
+
+    const productQuery = Product.find()
+
+    if (categoryId && categoryName !== 'all')
+        productQuery.find({
+            category: categoryId,
+        })
+
+    productQuery.find({
+        variants: {
+            $in: variantIds,
+        },
+        vendor: {
+            $in: filterOptionsIfAny(brand, allBrand),
+        },
     })
 
-    if (searchTerm != null && emptyCategory) {
-        req.query.or = createSearchRegexQuery(searchRegexObj)
-    } else {
-        req.query.category = categoryId
-    }
+    if (searchTerm)
+        productQuery.find({
+            $or: createSearchRegexQuery(searchRegexObj),
+        })
 
-    next()
-}
+    const products = await productQuery.sort(createSortQuery(sortByTerm))
+
+    res.status(200).json({
+        status: 'success',
+        results: products.length,
+        data: {
+            docs: products,
+        },
+    })
+})
+
+exports.getFilterFacets = catchAsync(async (req, res, next) => {
+    const variantOptionFacets = Variant.aggregate([
+        {
+            $facet: {
+                size: APIFeatures.createFacetsQuery('option1'),
+                color: APIFeatures.createFacetsQuery('option2'),
+                material: APIFeatures.createFacetsQuery('option3'),
+                maxPrice: APIFeatures.createMaxMinPriceFacetQuery(-1),
+                minPrice: APIFeatures.createMaxMinPriceFacetQuery(1),
+            },
+        },
+    ])
+
+    const productGeneralFacets = Product.aggregate([
+        {
+            $facet: {
+                brand: APIFeatures.createFacetsQuery('vendor'),
+            },
+        },
+    ])
+
+    const facets = await Promise.all([variantOptionFacets, productGeneralFacets])
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            facets,
+        },
+    })
+})
 
 exports.getProductFromSlug = catchAsync(async (req, res, next) => {
     const tour = await Product.findOne({ slug: req.params.slug })
@@ -141,134 +167,6 @@ exports.getProductFromSlug = catchAsync(async (req, res, next) => {
         status: 'success',
         data: {
             doc: tour,
-        },
-    })
-})
-
-exports.getFilterFacets = catchAsync(async (req, res, next) => {
-    const facetOne = Product.aggregate([
-        {
-            $facet: {
-                size: [
-                    {
-                        $unwind: '$variants',
-                    },
-                    {
-                        $group: {
-                            _id: '$variants.option1',
-                            variants: { $push: '$variants._id' },
-                        },
-                    },
-                    {
-                        $addFields: {
-                            value: '$_id',
-                        },
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                        },
-                    },
-                ],
-                color: [
-                    {
-                        $unwind: '$variants',
-                    },
-                    {
-                        $group: {
-                            _id: '$variants.option2',
-                            variants: { $push: '$variants._id' },
-                        },
-                    },
-                    {
-                        $addFields: {
-                            value: '$_id',
-                        },
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                        },
-                    },
-                ],
-                material: [
-                    {
-                        $unwind: '$variants',
-                    },
-                    {
-                        $group: {
-                            _id: '$variants.option3',
-                            variants: { $push: '$variants._id' },
-                        },
-                    },
-                    {
-                        $addFields: {
-                            value: '$_id',
-                        },
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                        },
-                    },
-                ],
-                brand: [
-                    {
-                        $group: {
-                            _id: '$vendor',
-                        },
-                    },
-                    {
-                        $addFields: {
-                            value: '$_id',
-                        },
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                        },
-                    },
-                ],
-                maxPrice: [
-                    {
-                        $sort: {
-                            maxPrice: -1,
-                        },
-                    },
-                    {
-                        $limit: 1,
-                    },
-                    {
-                        $project: {
-                            maxPrice: 1,
-                        },
-                    },
-                ],
-                minPrice: [
-                    {
-                        $sort: {
-                            min: 1,
-                        },
-                    },
-                    {
-                        $limit: 1,
-                    },
-                    {
-                        $project: {
-                            minPrice: 1,
-                        },
-                    },
-                ],
-            },
-        },
-    ])
-
-    const facets = await Promise.all([facetOne])
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            facets,
         },
     })
 })

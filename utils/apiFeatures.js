@@ -57,14 +57,47 @@ class APIFeatures {
         return this
     }
 
-    static checkBooleanValue(obj) {
-        Object.entries(obj).forEach(([key, value]) => {
-            if (typeof value !== 'object') {
-                if (value === 'true' || value === 'false') obj[key] = value === 'true'
-            } else {
-                APIFeatures.checkBooleanValue(value)
-            }
-        })
+    static createFacetsQuery = (optionName) => {
+        return [
+            {
+                $group: {
+                    _id: `$${optionName}`,
+                },
+            },
+            {
+                $addFields: {
+                    value: '$_id',
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                },
+            },
+        ]
+    }
+
+    static createMaxMinPriceFacetQuery = (sortOrder) => {
+        return [
+            {
+                $sort: {
+                    price: sortOrder,
+                },
+            },
+            {
+                $limit: 1,
+            },
+            {
+                $addFields: {
+                    value: '$price',
+                },
+            },
+            {
+                $project: {
+                    value: 1,
+                },
+            },
+        ]
     }
 }
 
