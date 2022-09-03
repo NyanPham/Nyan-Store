@@ -1,4 +1,5 @@
 const Product = require('../models/productModel')
+const Variant = require('../models/variantModel')
 const User = require('../models/userModel')
 const catchAsync = require('../utils/catchAsync')
 
@@ -16,16 +17,7 @@ const getVariantFromProduct = async (product, variant) => {
 exports.addToMyCart = catchAsync(async (req, res, next) => {
     const { variant, product, quantity } = req.body
 
-    const productToAdd = await Product.findOne({
-        variants: {
-            $elemMatch: {
-                _id: variant,
-            },
-        },
-        _id: product,
-    })
-
-    const variantToAdd = productToAdd.variants.find((vari) => vari._id.toString() === variant)
+    const variantToAdd = await Variant.findById(variant)
 
     const cartItem = {
         quantity,
@@ -65,7 +57,7 @@ exports.getMyCart = catchAsync(async (req, res, next) => {
 
 exports.updateMyCart = catchAsync(async (req, res, next) => {
     const { product, currentVariant, quantity, variant } = req.body
-    const newVariant = await getVariantFromProduct(product, variant)
+    const newVariant = await Variant.findById(variant)
 
     const user = await User.findByIdAndUpdate(
         req.user._id,

@@ -20,28 +20,20 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: [true, 'A product must have a summary'],
         },
-        variants: [
-            {
-                name: {
-                    type: String,
-                    required: [true, 'A variant must have a name'],
+        variants: {
+            type: [
+                {
+                    type: mongoose.Schema.ObjectId,
+                    ref: 'Variant',
                 },
-                option1: String,
-                option2: String,
-                option3: String,
-                images: [String],
-                price: {
-                    type: Number,
-                    required: [true, 'A variant must have a price'],
+            ],
+            validate: {
+                validator: function (variantsArray) {
+                    return Array.isArray(variantsArray) && variantsArray.length > 0
                 },
-                oldPrice: Number,
-                inventory: {
-                    type: Number,
-                    required: [true, 'A variant must have a number in inventory'],
-                    min: [0, 'A variant cannot have negative number in inventory'],
-                },
+                messsage: 'Variants must be an array and has at least 1 item',
             },
-        ],
+        },
         minPrice: Number,
         maxPrice: Number,
         SKU: {
@@ -108,27 +100,37 @@ productSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'category',
     }).populate({
-        path: 'collections',
+        path: 'variants',
     })
 
     next()
 })
 
-productSchema.pre('save', function (next) {
-    this.maxPrice = this.variants.reduce((max, variant) => {
-        if (variant.price <= max) return max
-        return variant.price
-    }, this.variants[0].price)
-
-    this.minPrice = this.variants.reduce((min, variant) => {
-        if (variant.price >= min) return min
-        return variant.price
-    }, this.variants[0].price)
-
-    this.price = this.variants[0].price
+productSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'category',
+    }).populate({
+        path: 'variants',
+    })
 
     next()
 })
+
+// productSchema.pre('save', function (next) {
+//     this.maxPrice = this.variants.reduce((max, variant) => {
+//         if (variant.price <= max) return max
+//         return variant.price
+//     }, this.variants[0].price)
+
+//     this.minPrice = this.variants.reduce((min, variant) => {
+//         if (variant.price >= min) return min
+//         return variant.price
+//     }, this.variants[0].price)
+
+//     this.price = this.variants[0].price
+
+//     next()
+// })
 
 productSchema.pre('save', function (next) {
     this.slug = slugify(this.name)
