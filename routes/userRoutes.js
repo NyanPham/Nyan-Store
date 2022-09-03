@@ -38,7 +38,7 @@ router.get('/logOut', authController.logOut)
 
 // Me Routes
 router.get('/me', userController.getMe, userController.getUser)
-router.patch('/updateMe', userController.updateMe)
+router.patch('/updateMe', userController.uploadUserPhoto, userController.resizeUserPhoto, userController.updateMe)
 router.delete('/deleteMe', userController.deleteMe)
 router.patch('/addToMyCart', cartController.addToMyCart)
 router.get('/getMyCart', cartController.getMyCart)

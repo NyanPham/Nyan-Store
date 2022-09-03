@@ -1,7 +1,22 @@
-const factory = require('./factoryHandler')
+const multer = require('multer')
+const sharp = require('sharp')
 const User = require('../models/userModel')
 const AppError = require('../utils/appError')
+const factory = require('./factoryHandler')
 const catchAsync = require('../utils/catchAsync')
+
+const multerStorage = multer.memoryStorage()
+const multerFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image')) {
+        return cb(null, true)
+    }
+    return cb(new AppError('Please upload an valid image file [jpg, jpeg, png]', 400), false)
+}
+
+const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter,
+})
 
 const filterAllowedFields = (obj, ...allowedFields) => {
     return allowedFields.reduce((filteredObj, field) => {
@@ -12,6 +27,20 @@ const filterAllowedFields = (obj, ...allowedFields) => {
         return filteredObj
     }, {})
 }
+
+exports.uploadUserPhoto = upload.single('photo')
+
+exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
+    req.body.filename = `user-${req.user._id}-${Date.now().toString()}.jpeg`
+
+    await sharp(req.file.buffer)
+        .resize(500, 500)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`./public/img/users/${req.body.filename}`)
+
+    next()
+})
 
 exports.getMe = (req, res, next) => {
     req.params.id = req.user._id
@@ -26,6 +55,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     }
 
     const filteredFields = filterAllowedFields(req.body, 'name', 'email', 'address', 'phone')
+
+    if (req.body.filename != null) filteredFields.photo = req.body.filename
 
     const user = await User.findByIdAndUpdate(req.user._id, filteredFields, {
         new: true,
