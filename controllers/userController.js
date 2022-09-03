@@ -31,6 +31,8 @@ const filterAllowedFields = (obj, ...allowedFields) => {
 exports.uploadUserPhoto = upload.single('photo')
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
+    if (req.file == null) return next()
+
     req.body.filename = `user-${req.user._id}-${Date.now().toString()}.jpeg`
 
     await sharp(req.file.buffer)
