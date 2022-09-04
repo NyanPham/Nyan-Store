@@ -5,16 +5,16 @@ const APIFeatures = require('../utils/apiFeatures')
 const factory = require('./factoryHandler')
 const catchAsync = require('../utils/catchAsync')
 
-const createSortQuery = (sortTerm) => {
+const getSortQuery = (sortTerm) => {
     switch (sortTerm) {
         case 'oldest':
             return 'createdAt'
         case 'latest':
             return '-createdAt'
         case 'price-up':
-            return 'minPrice,maxPrice,price'
+            return 'price'
         case 'price-down':
-            return '-minPrice,-price'
+            return '-price'
         case 'alphabet':
             return 'name'
         default:
@@ -98,6 +98,8 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
     ])
     const categoryToQuery = categoryId && categoryName !== 'all' ? categoryId : '*'
 
+    console.log(getSortQuery(sortByTerm))
+
     const products = await Product.find({
         category: categoryToQuery,
         variants: {
@@ -107,7 +109,7 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
             $in: filterOptionsIfAny(brand, allBrand),
         },
         $or: createSearchRegexQuery(searchRegexObj),
-    }).sort(createSortQuery(sortByTerm))
+    }).sort(getSortQuery(sortByTerm))
 
     res.status(200).json({
         status: 'success',

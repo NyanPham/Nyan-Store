@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-
 const slugify = require('../utils/slugify')
 
 const productSchema = new mongoose.Schema(
@@ -115,22 +114,6 @@ productSchema.pre(/^find/, function (next) {
 
     next()
 })
-
-// productSchema.pre('save', function (next) {
-//     this.maxPrice = this.variants.reduce((max, variant) => {
-//         if (variant.price <= max) return max
-//         return variant.price
-//     }, this.variants[0].price)
-
-//     this.minPrice = this.variants.reduce((min, variant) => {
-//         if (variant.price >= min) return min
-//         return variant.price
-//     }, this.variants[0].price)
-
-//     this.price = this.variants[0].price
-
-//     next()
-// })
 
 productSchema.pre('save', function (next) {
     this.slug = slugify(this.name)

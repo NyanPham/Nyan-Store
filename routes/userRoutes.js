@@ -8,8 +8,6 @@ const orderRouter = require('./orderRoutes')
 
 const router = express.Router()
 
-// need to find the better logic as a normal user can access orders of another person knowing his/her user._id
-
 // To bidding
 router.use('/:userId/bidding', biddingRouter)
 router.use('/myBidding', biddingRouter)
