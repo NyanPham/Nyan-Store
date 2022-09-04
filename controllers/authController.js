@@ -20,7 +20,7 @@ const signAndSendToken = (user, res, statusCode) => {
         secure: false,
     }
 
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = false
     console.log('before cookie: ', token)
 
     res.cookie('jwt', token, cookieOptions)
@@ -101,8 +101,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     } else if (req.cookies.jwt) {
         token = req.cookies.jwt
     }
-
-    console.log('token: ', token)
 
     if (token == null) {
         return next(new AppError('You have not logged in. Please log in to continue', 403))

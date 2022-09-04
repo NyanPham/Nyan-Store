@@ -27,19 +27,8 @@ app.enable('trust proxy')
 
 // Security
 app.use(helmet())
-app.use(
-    cors({
-        credentials: true,
-        origin: 'https://elaborate-chimera-ea1e59.netlify.app',
-    })
-)
-app.options(
-    '*',
-    cors({
-        credentials: true,
-        origin: 'https://elaborate-chimera-ea1e59.netlify.app',
-    })
-)
+app.use(cors())
+app.options('*', cors())
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
