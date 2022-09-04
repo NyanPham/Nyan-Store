@@ -16,13 +16,16 @@ const signAndSendToken = (user, res, statusCode) => {
     const token = signToken(user._id)
     const cookieOptions = {
         httpOnly: true,
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
         secure: false,
     }
 
-    // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
+    console.log('before cookie: ', token)
 
     res.cookie('jwt', token, cookieOptions)
+
+    console.log('after cookie: ', token)
     res.status(statusCode).json({
         status: 'success',
         token,
@@ -99,6 +102,8 @@ exports.protect = catchAsync(async (req, res, next) => {
         token = req.cookies.jwt
     }
 
+    console.log('token: ', token)
+
     if (token == null) {
         return next(new AppError('You have not logged in. Please log in to continue', 403))
     }
@@ -156,7 +161,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
         return next(new AppError('No user found with that email', 400))
     }
 
-    const resetUrl = `https://elaborate-chimera-ea1e59.netlify.app//resetPassword/${token}`
+    const resetUrl = `127.0.0.1:8080/resetPassword/${token}`
     const message = `Click the link below to reset your password\n${resetUrl}\nThe reset token is only valid in 10 minutes. Be hurry!`
 
     try {
