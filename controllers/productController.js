@@ -58,8 +58,6 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
         brand,
         maxPrice,
         minPrice,
-        skip,
-        limit,
         sortByTerm,
         categoryId,
         emptyCategory,
@@ -96,12 +94,9 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
             },
         },
     ])
-    const categoryToQuery = categoryId && categoryName !== 'all' ? categoryId : '*'
 
-    console.log(getSortQuery(sortByTerm))
-
-    const products = await Product.find({
-        category: categoryToQuery,
+    const productFilterQuery = {
+        category: categoryId,
         variants: {
             $in: variantIds,
         },
@@ -109,7 +104,11 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
             $in: filterOptionsIfAny(brand, allBrand),
         },
         $or: createSearchRegexQuery(searchRegexObj),
-    }).sort(getSortQuery(sortByTerm))
+    }
+
+    if (categoryName.toLowerCase() === 'all') delete productFilterQuery['category']
+
+    const products = await Product.find(productFilterQuery).sort(getSortQuery(sortByTerm))
 
     res.status(200).json({
         status: 'success',
