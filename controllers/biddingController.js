@@ -1,5 +1,5 @@
-const Bidding = require('../models/biddingModel')
 const factory = require('./factoryHandler')
+const Bidding = require('../models/biddingModel')
 
 exports.getProductAndUserIds = (req, res, next) => {
     if (req.params.productId) req.body.product = req.params.productId
