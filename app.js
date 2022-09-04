@@ -22,6 +22,8 @@ const variantRouter = require('./routes/variantRoutes')
 
 const app = express()
 
+app.enable('trust proxy')
+
 // Security
 app.use(helmet())
 app.use(cors())
