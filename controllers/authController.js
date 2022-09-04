@@ -156,7 +156,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
         return next(new AppError('No user found with that email', 400))
     }
 
-    const resetUrl = `127.0.0.1:8080/resetPassword/${token}`
+    const resetUrl = `https://elaborate-chimera-ea1e59.netlify.app//resetPassword/${token}`
     const message = `Click the link below to reset your password\n${resetUrl}\nThe reset token is only valid in 10 minutes. Be hurry!`
 
     try {

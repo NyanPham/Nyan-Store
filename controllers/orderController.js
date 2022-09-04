@@ -44,8 +44,8 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        success_url: 'http://127.0.0.1:8080/',
-        cancel_url: 'http://127.0.0.1:8080/cart',
+        success_url: 'https://elaborate-chimera-ea1e59.netlify.app/',
+        cancel_url: 'https://elaborate-chimera-ea1e59.netlify.app/',
         customer_email: req.user.email,
         line_items: lineItems,
         mode: 'payment',
