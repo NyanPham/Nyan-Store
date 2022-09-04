@@ -4,7 +4,7 @@
     "description": "The backend of Nyan's Store, a fullstack and fully functional Ecommerce Website",
     "main": "server.js",
     "scripts": {
-        "start": "nodemon server.js"
+        "start": "node server.js"
     },
     "author": "Nhan Pham",
     "license": "ISC",
