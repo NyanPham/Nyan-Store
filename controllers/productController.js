@@ -68,7 +68,7 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
     } = req.body.filterQuery
     const { allSize, allColor, allMaterial, allBrand } = req.body.all
     const searchRegexObj = {
-        $regex: `^${searchTerm}`,
+        $regex: searchTerm ? `^${searchTerm}` : '',
         $options: 'mix',
     }
 
@@ -96,29 +96,18 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
             },
         },
     ])
+    const categoryToQuery = categoryId && categoryName !== 'all' ? categoryId : '*'
 
-    const productQuery = Product.find()
-
-    if (categoryId && categoryName !== 'all')
-        productQuery.find({
-            category: categoryId,
-        })
-
-    productQuery.find({
+    const products = await Product.find({
+        category: categoryToQuery,
         variants: {
             $in: variantIds,
         },
         vendor: {
             $in: filterOptionsIfAny(brand, allBrand),
         },
-    })
-
-    if (searchTerm)
-        productQuery.find({
-            $or: createSearchRegexQuery(searchRegexObj),
-        })
-
-    const products = await productQuery.sort(createSortQuery(sortByTerm))
+        $or: createSearchRegexQuery(searchRegexObj),
+    }).sort(createSortQuery(sortByTerm))
 
     res.status(200).json({
         status: 'success',
