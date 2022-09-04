@@ -1,7 +1,7 @@
 {
     "name": "nyan-store",
     "version": "1.0.0",
-    "description": "The backend of Nyan's Store, a fullstack and fully functional Ecommerce Website",
+    "description": "The backend of Nyan Store, a fullstack and fully functional Ecommerce Website",
     "main": "app.js",
     "scripts": {
         "start": "node server.js",
@@ -9,9 +9,6 @@
     },
     "author": "Nhan Pham",
     "license": "ISC",
-    "devDependencies": {
-        "nodemon": "^2.0.19"
-    },
     "dependencies": {
         "bcrypt": "^5.0.1",
         "cookie-parser": "^1.4.6",
@@ -29,6 +26,9 @@
         "sharp": "^0.30.7",
         "stripe": "^10.7.0",
         "xss-clean": "^0.1.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.19"
     },
     "engines": {
         "node": "^16.0.0"
