@@ -20,6 +20,8 @@ const signAndSendToken = (user, res, statusCode) => {
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
     })
+    alert(token)
+    console.log('in token:', res)
 
     res.status(statusCode).json({
         status: 'success',
