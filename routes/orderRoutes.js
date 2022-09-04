@@ -6,6 +6,8 @@ const router = express.Router({ mergeParams: true })
 
 router.use(authController.protect)
 
+router.post('/checkout-session', orderController.getCheckoutSession)
+
 router.route('/').get(orderController.getUserId, orderController.getAllOrders).post(orderController.createOrder)
 router
     .route('/:id')

@@ -13,9 +13,11 @@ const orderSchema = new mongoose.Schema(
                     ref: 'Product',
                     required: true,
                 },
-                option1: String,
-                option2: String,
-                option3: String,
+                variant: {
+                    type: mongoose.Schema.ObjectId,
+                    ref: 'Variant',
+                    required: true,
+                },
                 quantity: {
                     type: Number,
                     required: true,
@@ -44,13 +46,6 @@ orderSchema.index({
 })
 
 orderSchema.pre(/^find/, function (next) {
-    this.populate({
-        path: 'items',
-        populate: {
-            path: 'product',
-        },
-    })
-
     next()
 })
 
