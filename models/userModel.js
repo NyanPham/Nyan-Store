@@ -126,7 +126,7 @@ userSchema.pre('save', async function (next) {
 })
 
 userSchema.pre(/^find/, function (next) {
-    this.find({ active: { $ne: false } })
+    this.find({ active: { $ne: false } }).populate({ path: 'wishlist', populate: { path: 'item' } })
 
     next()
 })

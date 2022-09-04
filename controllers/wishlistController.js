@@ -46,7 +46,7 @@ exports.addWishlist = catchAsync(async (req, res, next) => {
 })
 
 exports.removeWishlist = catchAsync(async (req, res, next) => {
-    const newWishlist = req.body.wishlist.filter((item) => item.item !== req.body.product)
+    const newWishlist = req.body.wishlist.filter((item) => item.item._id !== req.body.product)
 
     const user = await User.findByIdAndUpdate(
         req.user._id,
