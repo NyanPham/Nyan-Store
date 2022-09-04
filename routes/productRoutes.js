@@ -1,11 +1,11 @@
 const express = require('express')
 const productController = require('../controllers/productController')
 const authController = require('../controllers/authController')
-const biddingRouter = require('./biddingRoutes')
+const auctionRouter = require('./auctionRoutes')
 
 const router = express.Router({ mergeParams: true })
 
-// router.use('/:productId/bidding', biddingRouter)
+router.use('/:productId/bidding', auctionRouter)
 
 router.get('/filterFacets', productController.getFilterFacets)
 router.post('/filter', productController.filterProducts)

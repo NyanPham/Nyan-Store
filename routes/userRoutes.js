@@ -3,14 +3,14 @@ const authController = require('../controllers/authController')
 const userController = require('../controllers/userController')
 const wishlistController = require('../controllers/wishlistController')
 const cartController = require('../controllers/cartController')
-const biddingRouter = require('./biddingRoutes')
+const auctionRouter = require('./auctionRoutes')
 const orderRouter = require('./orderRoutes')
 
 const router = express.Router()
 
 // To bidding
-router.use('/:userId/bidding', biddingRouter)
-router.use('/myBidding', biddingRouter)
+router.use('/:userId/bidding', auctionRouter)
+router.use('/myBidding', auctionRouter)
 
 // To orders
 router.use('/:userId/orders', orderRouter)
