@@ -8,6 +8,12 @@ const orderRouter = require('./orderRoutes')
 
 const router = express.Router()
 
+// Authentication
+router.post('/signUp', authController.signUp)
+router.post('/logIn', authController.logIn)
+router.post('/forgotPassword', authController.forgotPassword)
+router.patch('/resetPassword/:resetToken', authController.resetPassword)
+
 // To bidding
 router.use('/:userId/bidding', auctionRouter)
 router.use('/myBidding', auctionRouter)
@@ -17,18 +23,11 @@ router.use('/:userId/orders', orderRouter)
 router.use('/myOrders', orderRouter)
 
 // On client
-router.get('/isLoggedIn', authController.isLoggedIn)
 router
     .route('/myWishlist')
     .get(authController.protect, wishlistController.getWishlist)
     .patch(authController.protect, wishlistController.addWishlist)
     .delete(authController.protect, wishlistController.removeWishlist)
-
-// Authentication
-router.post('/signUp', authController.signUp)
-router.post('/logIn', authController.logIn)
-router.post('/forgotPassword', authController.forgotPassword)
-router.patch('/resetPassword/:resetToken', authController.resetPassword)
 
 router.use(authController.protect)
 router.patch('/updatePassword', authController.updatePassword)
