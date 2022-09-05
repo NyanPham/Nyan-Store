@@ -18,6 +18,7 @@ const signAndSendToken = (user, res, statusCode) => {
         httpOnly: false,
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
         secure: false,
+        sameSite: 'none',
     }
 
     res.cookie('jwt', token, cookieOptions)
