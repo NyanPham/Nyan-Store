@@ -26,7 +26,7 @@ const app = express()
 app.enable('trust proxy')
 
 // Security
-app.use(helmet())
+// app.use(helmet())
 app.use(
     cors({
         origin: ['https://elaborate-chimera-ea1e59.netlify.app/'],
