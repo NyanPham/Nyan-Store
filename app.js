@@ -34,11 +34,16 @@ app.use(
     })
 )
 app.options('*', cors())
-
 app.options(
     '/api/v1/users/logIn',
     cors({ origin: ['https://elaborate-chimera-ea1e59.netlify.app/'], credentials: true })
 )
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+    next()
+})
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
