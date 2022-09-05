@@ -14,6 +14,7 @@ const signToken = (id) =>
 
 const signAndSendToken = (user, res, statusCode) => {
     const token = signToken(user._id)
+    console.log('token after created here: ', token)
     const cookieOptions = {
         httpOnly: true,
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
@@ -68,12 +69,15 @@ exports.signUp = catchAsync(async (req, res, next) => {
 exports.logIn = catchAsync(async (req, res, next) => {
     const { email, password } = req.body
 
+    console.log('email, password: ', email, '; ', password)
     const user = await User.findOne({ email }).select('+password')
     const correctPassword = await user?.comparePassword(password, user.password)
 
     if (user == null || !correctPassword) {
         return next(new AppError('Incorrect email or password. Please try again...', 401))
     }
+
+    console.log('good before send: ', user, correctPassword)
 
     signAndSendToken(user, res, 200)
 })

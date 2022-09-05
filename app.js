@@ -26,14 +26,12 @@ const app = express()
 app.enable('trust proxy')
 
 // Security
-// app.use(helmet())
 app.use(
     cors({
         origin: 'https://elaborate-chimera-ea1e59.netlify.app',
         credentials: true,
     })
 )
-
 app.options('*', cors())
 
 const limiter = rateLimit({
@@ -41,6 +39,8 @@ const limiter = rateLimit({
     max: 1000,
     message: 'You have reached the maximum query limit. Please wait for 15 minutes...',
 })
+
+app.use(helmet())
 app.use(limiter)
 app.use(mongoSanitize())
 app.use(xss())
