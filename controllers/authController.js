@@ -15,9 +15,9 @@ const signToken = (id) =>
 const signAndSendToken = (user, res, statusCode) => {
     const token = signToken(user._id)
     const cookieOptions = {
-        httpOnly: true,
+        httpOnly: false,
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-        secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+        secure: false,
     }
 
     res.cookie('jwt', token, cookieOptions)
