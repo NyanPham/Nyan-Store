@@ -93,7 +93,7 @@ exports.logOut = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
     let token
 
-    console.log(req.cookies)
+    console.log(req.cookies.jwt)
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1]
