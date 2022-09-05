@@ -23,13 +23,14 @@ router.use('/:userId/orders', orderRouter)
 router.use('/myOrders', orderRouter)
 
 // On client
+router.use(authController.protect)
+
 router
     .route('/myWishlist')
-    .get(authController.protect, wishlistController.getWishlist)
-    .patch(authController.protect, wishlistController.addWishlist)
-    .delete(authController.protect, wishlistController.removeWishlist)
+    .get(wishlistController.getWishlist)
+    .patch(wishlistController.addWishlist)
+    .delete(wishlistController.removeWishlist)
 
-router.use(authController.protect)
 router.patch('/updatePassword', authController.updatePassword)
 router.get('/logOut', authController.logOut)
 
