@@ -14,7 +14,6 @@ const signToken = (id) =>
 
 const signAndSendToken = (user, res, statusCode) => {
     const token = signToken(user._id)
-    console.log('token after created here: ', token)
     const cookieOptions = {
         httpOnly: true,
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
@@ -22,6 +21,8 @@ const signAndSendToken = (user, res, statusCode) => {
     }
 
     res.cookie('jwt', token, cookieOptions)
+
+    console.log('cookie sent', cookieOptions)
 
     res.status(statusCode).json({
         status: 'success',
@@ -69,15 +70,12 @@ exports.signUp = catchAsync(async (req, res, next) => {
 exports.logIn = catchAsync(async (req, res, next) => {
     const { email, password } = req.body
 
-    console.log('email, password: ', email, '; ', password)
     const user = await User.findOne({ email }).select('+password')
     const correctPassword = await user?.comparePassword(password, user.password)
 
     if (user == null || !correctPassword) {
         return next(new AppError('Incorrect email or password. Please try again...', 401))
     }
-
-    console.log('good before send: ', user, correctPassword)
 
     signAndSendToken(user, res, 200)
 })
@@ -124,7 +122,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 exports.isLoggedIn = async (req, res, next) => {
     let currentUser
     try {
-        console.log(req.cookies.jwt)
         const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET)
 
         currentUser = await User.findById(decoded.id)
