@@ -17,15 +17,11 @@ const signAndSendToken = (user, res, statusCode) => {
     const cookieOptions = {
         httpOnly: true,
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-        secure: false,
+        secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
     }
-
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = false
-    console.log('before cookie: ', token)
 
     res.cookie('jwt', token, cookieOptions)
 
-    console.log('after cookie: ', token)
     res.status(statusCode).json({
         status: 'success',
         token,
