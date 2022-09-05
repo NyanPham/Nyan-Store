@@ -22,8 +22,6 @@ const signAndSendToken = (user, res, statusCode) => {
 
     res.cookie('jwt', token, cookieOptions)
 
-    console.log('cookie sent', cookieOptions)
-
     res.status(statusCode).json({
         status: 'success',
         token,
@@ -93,6 +91,8 @@ exports.logOut = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
     let token
+
+    console.log(req.cookies)
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1]
