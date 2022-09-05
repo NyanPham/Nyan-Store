@@ -30,6 +30,7 @@ const signAndSendToken = (user, res, statusCode) => {
 }
 
 const sendIsLoggedIn = (res, isLoggedIn, currentUser = null) => {
+    console.log(isLoggedIn)
     if (!isLoggedIn) {
         return res.status(400).json({
             status: 'fail',
@@ -124,7 +125,7 @@ exports.isLoggedIn = async (req, res, next) => {
     let currentUser
     try {
         const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET)
-
+        console.log(decoded)
         currentUser = await User.findById(decoded.id)
         if (currentUser == null) return sendIsLoggedIn(res, false)
 
