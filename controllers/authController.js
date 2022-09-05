@@ -120,6 +120,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 exports.isLoggedIn = async (req, res, next) => {
     let currentUser
     try {
+        console.log(req.cookies.jwt)
         const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET)
 
         currentUser = await User.findById(decoded.id)
