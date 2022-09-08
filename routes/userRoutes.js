@@ -13,6 +13,7 @@ router.post('/signUp', authController.signUp)
 router.post('/logIn', authController.logIn)
 router.post('/forgotPassword', authController.forgotPassword)
 router.patch('/resetPassword/:resetToken', authController.resetPassword)
+router.get('/api/v1/users/isLoggedIn', authController.isLoggedIn)
 
 // To bidding
 router.use('/:userId/bidding', auctionRouter)
