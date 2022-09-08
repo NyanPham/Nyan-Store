@@ -42,7 +42,7 @@ app.options(
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 1000,
+    max: 100000,
     message: 'You have reached the maximum query limit. Please wait for 15 minutes...',
 })
 
