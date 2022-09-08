@@ -28,14 +28,14 @@ app.enable('trust proxy')
 // Security
 app.use(
     cors({
-        origin: 'https://elaborate-chimera-ea1e59.netlify.app',
+        origin: ['https://elaborate-chimera-ea1e59.netlify.app', 'http://localhost:8080'],
         credentials: true,
     })
 )
 app.options(
     '*',
     cors({
-        origin: 'https://elaborate-chimera-ea1e59.netlify.app',
+        origin: ['https://elaborate-chimera-ea1e59.netlify.app', 'http://localhost:8080'],
         credentials: true,
     })
 )
