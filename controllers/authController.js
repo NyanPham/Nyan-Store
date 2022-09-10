@@ -14,7 +14,6 @@ const signToken = (id) =>
 
 const signAndSendToken = (user, res, statusCode) => {
     const token = signToken(user._id)
-    console.log('before cookie options')
     const cookieOptions = {
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
         httpOnly: true,
@@ -23,6 +22,8 @@ const signAndSendToken = (user, res, statusCode) => {
     }
 
     res.cookie('jwt', token, cookieOptions)
+
+    console.log('after sending cookie')
 
     res.status(statusCode).json({
         status: 'success',
