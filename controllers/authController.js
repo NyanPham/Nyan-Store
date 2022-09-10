@@ -15,13 +15,14 @@ const signToken = (id) =>
 const signAndSendToken = (user, res, statusCode) => {
     const token = signToken(user._id)
 
+    console.log('has secure: ', req.secure === true)
+
     const cookieOptions = {
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
         httpOnly: true,
         secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
         sameSite: 'none',
     }
-    console.log(cookieOptions)
 
     res.cookie('jwt', token, cookieOptions)
 
