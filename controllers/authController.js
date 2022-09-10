@@ -21,9 +21,9 @@ const signAndSendToken = (user, res, statusCode) => {
         sameSite: 'none',
     }
 
-    res.cookie('jwt', token, cookieOptions)
+    console.log(cookieOptions)
 
-    console.log('after sending cookie')
+    res.cookie('jwt', token, cookieOptions)
 
     res.status(statusCode).json({
         status: 'success',
