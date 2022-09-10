@@ -21,8 +21,6 @@ const signAndSendToken = (user, res, statusCode) => {
         sameSite: 'none',
     }
 
-    conosle.log('before sending token')
-
     res.cookie('jwt', token, cookieOptions)
 
     res.status(statusCode).json({
@@ -78,6 +76,8 @@ exports.logIn = catchAsync(async (req, res, next) => {
     if (user == null || !correctPassword) {
         return next(new AppError('Incorrect email or password. Please try again...', 401))
     }
+
+    console.log('here')
 
     signAndSendToken(user, res, 200)
 })
