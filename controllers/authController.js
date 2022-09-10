@@ -26,11 +26,15 @@ const signAndSendToken = (user, res, statusCode) => {
     res.status(statusCode).json({
         status: 'success',
         token,
+        currentUser: {
+            name: user.name,
+            email: user.email,
+            photo: user.photo,
+        },
     })
 }
 
 const sendIsLoggedIn = (res, isLoggedIn, currentUser = null) => {
-    console.log(isLoggedIn)
     if (!isLoggedIn) {
         return res.status(400).json({
             status: 'fail',
