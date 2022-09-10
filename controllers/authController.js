@@ -15,9 +15,9 @@ const signToken = (id) =>
 const signAndSendToken = (user, res, statusCode) => {
     const token = signToken(user._id)
     const cookieOptions = {
-        httpOnly: true,
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-        secure: true,
+        httpOnly: true,
+        secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
         sameSite: 'none',
     }
 
@@ -83,6 +83,9 @@ exports.logIn = catchAsync(async (req, res, next) => {
 exports.logOut = catchAsync(async (req, res, next) => {
     res.cookie('jwt', 'logged_out', {
         expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true,
+        secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+        sameSite: 'none',
     })
 
     res.status(200).json({
