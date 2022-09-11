@@ -62,7 +62,7 @@ const productSchema = new mongoose.Schema(
             default: false,
             validate: {
                 validator: function () {
-                    return this.biddingExpiresIn !== null
+                    return this.auctionExpiresIn !== null
                 },
                 message: 'Auctioned product must have an expire date.',
             },
