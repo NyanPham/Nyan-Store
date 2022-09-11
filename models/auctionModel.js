@@ -34,6 +34,15 @@ biddingSchema.index({
     createdAt: -1,
 })
 
+biddingSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'user',
+        select: 'email',
+    })
+
+    next()
+})
+
 const Bidding = mongoose.model('Bidding', biddingSchema)
 
 module.exports = Bidding
