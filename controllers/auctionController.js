@@ -7,7 +7,7 @@ exports.getProductAndUserIds = (req, res, next) => {
 
     const parsedUrl = req.originalUrl.split('/')
 
-    if (parsedUrl[parsedUrl.length - 1].startsWith('my')) {
+    if (parsedUrl[parsedUrl.length - 1].startsWith('my') && req.user != null) {
         req.body.user = req.user._id
     }
 
