@@ -16,6 +16,10 @@ exports.getProductAndUserIds = (req, res, next) => {
 
 exports.getUserToBid = (req, res, next) => {
     if (req.user) req.body.user = req.user._id
+
+    console.log('loggedin user: ', req.user)
+    console.log('user in body data: ', req.body.user)
+
     next()
 }
 
