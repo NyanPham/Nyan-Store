@@ -113,8 +113,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
 
-    console.log('decoded: ', decoded)
-
     const currentUser = await User.findById(decoded.id)
     if (currentUser == null) {
         return next(new AppError('The user belonging to the token does no longer exist. Please log in again', 400))
@@ -126,7 +124,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     req.user = currentUser
 
-    console.log('protecting: ', req.user)
     next()
 })
 
@@ -134,7 +131,7 @@ exports.isLoggedIn = async (req, res, next) => {
     let currentUser
     try {
         const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET)
-        console.log(decoded)
+
         currentUser = await User.findById(decoded.id)
         if (currentUser == null) return sendIsLoggedIn(res, false)
 
