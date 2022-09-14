@@ -10,19 +10,21 @@ const Variant = require('../../models/variantModel')
 dotenv.config({ path: `${__dirname}/../../config.env` })
 const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
 
-const products = JSON.parse(fs.readFileSync(`${__dirname}/products-export.json`, 'utf-8'))
-const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'))
-const collections = JSON.parse(fs.readFileSync(`${__dirname}/collections.json`, 'utf-8'))
-const categories = JSON.parse(fs.readFileSync(`${__dirname}/categories.json`, 'utf-8'))
-const variants = JSON.parse(fs.readFileSync(`${__dirname}/all-variants.json`, 'utf-8'))
+// const products = JSON.parse(fs.readFileSync(`${__dirname}/products-export.json`, 'utf-8'))
+// const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'))
+// const collections = JSON.parse(fs.readFileSync(`${__dirname}/collections.json`, 'utf-8'))
+// const categories = JSON.parse(fs.readFileSync(`${__dirname}/categories.json`, 'utf-8'))
+// const variants = JSON.parse(fs.readFileSync(`${__dirname}/all-variants.json`, 'utf-8'))
+// const bagVariants = JSON.parse(fs.readFileSync(`${__dirname}/bag-variants.json`, 'utf-8'))
+const bags = JSON.parse(fs.readFileSync(`${__dirname}/bags.json`, 'utf-8'))
 
 const importData = async () => {
     try {
-        await Product.create(products)
+        await Product.create(bags)
         // await User.create(users)
         // await Collection.create(collections)
         // await Category.create(categories)
-        // await Variant.create(variants)
+        // await Variant.create(bagVariants)
 
         console.log('Database is imported successfully')
     } catch (err) {
@@ -34,10 +36,11 @@ const importData = async () => {
 
 const deleteData = async () => {
     try {
-        await Product.deleteMany()
+        // await Product.deleteMany()
         // await User.deleteMany()
         // await Collection.deleteMany()
         // await Category.deleteMany()
+        // await Variant.deleteMany()
 
         console.log('Database is deleted successfully')
     } catch (err) {

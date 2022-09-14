@@ -1,0 +1,211 @@
+[
+    {
+        "name": "Charis",
+        "option1": "l",
+        "option2": "blue",
+        "images": ["charis.jpg"],
+        "price": 725,
+        "comparePrice": 800,
+        "inventory": 12
+    },
+    {
+        "name": "Frottle",
+        "option1": "m",
+        "option2": "white",
+        "images": ["frill-1.jpg, frill-2.jpg"],
+        "price": 990,
+        "inventory": 3
+    },
+    {
+        "name": "Frottle Lorus",
+        "option1": "l",
+        "option2": "green",
+        "images": ["frill-3.jpg"],
+        "price": 697,
+        "inventory": 18
+    },
+    {
+        "name": "Frottle Lorem",
+        "option1": "l",
+        "option2": "jade-blue",
+        "images": ["frill-4.jpg"],
+        "price": 241,
+        "comparePrice": 300,
+        "inventory": 40
+    },
+    {
+        "name": "Frottle Kautus",
+        "option1": "m",
+        "option2": "brown",
+        "images": ["frill-5.jpg"],
+        "price": 152,
+        "comparePrice": 250,
+        "inventory": 26
+    },
+    {
+        "name": "Frottle Luft",
+        "option1": "m",
+        "option2": "purple",
+        "images": ["frill-6.jpg"],
+        "price": 152,
+        "comparePrice": 250,
+        "inventory": 26
+    },
+    {
+        "name": "Garnet Peak",
+        "option1": "m",
+        "option2": "slate",
+        "images": ["garnet.jpg"],
+        "price": 667,
+        "comparePrice": 700,
+        "inventory": 52
+    },
+    {
+        "name": "Insignia Tumple",
+        "option1": "l",
+        "option2": "light-orange",
+        "images": ["insignia-1.jpg"],
+        "price": 624,
+        "inventory": 16
+    },
+    {
+        "name": "Insignia Kautus",
+        "option1": "l",
+        "option2": "purple",
+        "images": ["insignia-2.jpg"],
+        "price": 624,
+        "inventory": 35
+    },
+    {
+        "name": "Insignia Kanvle",
+        "option1": "l",
+        "option2": "light-brown",
+        "images": ["insignia-3.jpg"],
+        "price": 624,
+        "inventory": 28
+    },
+    {
+        "name": "Insignia Forust",
+        "option1": "m",
+        "option2": "light-green",
+        "images": ["insignia-4.jpg"],
+        "price": 678,
+        "comparePrice": 700,
+        "inventory": 18
+    },
+    {
+        "name": "Insignia Fife",
+        "option1": "m",
+        "option2": "light-red",
+        "images": ["insignia-5.jpg"],
+        "price": 678,
+        "comparePrice": 700,
+        "inventory": 30
+    },
+    {
+        "name": "Insignia Osun",
+        "option1": "xl",
+        "option2": "ocean",
+        "images": ["insignia-5.jpg"],
+        "price": 917,
+        "inventory": 42
+    },
+    {
+        "name": "Pearl Gife",
+        "option1": "sm",
+        "option2": "pink",
+        "images": ["jaded-1.jpg"],
+        "price": 604,
+        "inventory": 25
+    },
+    {
+        "name": "Pearl Fife",
+        "option1": "sm",
+        "option2": "red",
+        "images": ["jaded-2.jpg"],
+        "price": 604,
+        "inventory": 27
+    },
+    {
+        "name": "Pearl Forus",
+        "option1": "m",
+        "option2": "green",
+        "images": ["jaded-3.jpg"],
+        "price": 318,
+        "inventory": 30
+    },
+    {
+        "name": "Pearl Violum",
+        "option1": "sm",
+        "option2": "violet",
+        "images": ["jaded-4.jpg"],
+        "price": 749,
+        "inventory": 16
+    },
+    {
+        "name": "Pearl Osun",
+        "option1": "l",
+        "option2": "ocean",
+        "images": ["jaded-5.jpg"],
+        "price": 520,
+        "inventory": 7
+    },
+    {
+        "name": "Lavish Sum",
+        "option1": "sm",
+        "option2": "green",
+        "images": ["lavish-1.jpg"],
+        "price": 129,
+        "priceCompare": 229,
+        "inventory": 9
+    },
+    {
+        "name": "Lavish Violum",
+        "option1": "sm",
+        "option2": "purple",
+        "images": ["lavish-2.jpg"],
+        "price": 129,
+        "comparePrice": 229,
+        "inventory": 24
+    },
+    {
+        "name": "Lavish Fife",
+        "option1": "m",
+        "option2": "light-red",
+        "images": ["lavish-3.jpg"],
+        "price": 229,
+        "inventory": 35
+    },
+    {
+        "name": "Lavish Osun",
+        "option1": "m",
+        "option2": "ocean",
+        "images": ["lavish-4.jpg"],
+        "price": 339,
+        "inventory": 25
+    },
+    {
+        "name": "Lavish Dust",
+        "option1": "m",
+        "option2": "brown",
+        "images": ["lavish-5.jpg"],
+        "price": 239,
+        "inventory": 48
+    },
+    {
+        "name": "Lavish Navig",
+        "option1": "l",
+        "option2": "navy",
+        "images": ["lavish-6.jpg"],
+        "price": 420,
+        "inventory": 8
+    },
+    {
+        "name": "Mantle Luft",
+        "option1": "sm",
+        "option2": "white",
+        "images": ["mantle-1.jpg"],
+        "price": 550,
+        "inventory": 36
+    }
+]
