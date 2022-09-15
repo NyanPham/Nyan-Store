@@ -16,15 +16,17 @@ const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSW
 // const categories = JSON.parse(fs.readFileSync(`${__dirname}/categories.json`, 'utf-8'))
 // const variants = JSON.parse(fs.readFileSync(`${__dirname}/all-variants.json`, 'utf-8'))
 // const bagVariants = JSON.parse(fs.readFileSync(`${__dirname}/bag-variants.json`, 'utf-8'))
-const bags = JSON.parse(fs.readFileSync(`${__dirname}/bags.json`, 'utf-8'))
+// const careVariants = JSON.parse(fs.readFileSync(`${__dirname}/bodycare-variants.json`, 'utf-8'))
+// const bags = JSON.parse(fs.readFileSync(`${__dirname}/bags.json`, 'utf-8'))
+const bodycare = JSON.parse(fs.readFileSync(`${__dirname}/bodycare.json`, 'utf-8'))
 
 const importData = async () => {
     try {
-        await Product.create(bags)
+        await Product.create(bodycare)
         // await User.create(users)
         // await Collection.create(collections)
         // await Category.create(categories)
-        // await Variant.create(bagVariants)
+        // await Variant.create(careVariants)
 
         console.log('Database is imported successfully')
     } catch (err) {
