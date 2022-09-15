@@ -59,7 +59,7 @@ class APIFeatures {
         return [
             {
                 $group: {
-                    _id: { $toLower: `$${optionName}` },
+                    _id: `$${optionName}`,
                 },
             },
             {
