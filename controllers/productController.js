@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const Product = require('../models/productModel')
 const Variant = require('../models/variantModel')
 const AppError = require('../utils/appError')
@@ -132,20 +133,94 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
         },
     ])
 
-    const productGeneralFacets = Product.aggregate([
+    const productAggregation = [
         {
-            $facet: {
-                brand: APIFeatures.createFacetsQuery('vendor'),
+            $lookup: {
+                from: 'variants',
+                let: { variant_ids: '$variants' },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $in: ['$_id', '$$variant_ids'],
+                            },
+                        },
+                    },
+                    {
+                        $facet: {
+                            size: APIFeatures.createFacetsQuery('option1'),
+                            color: APIFeatures.createFacetsQuery('option2'),
+                            material: APIFeatures.createFacetsQuery('option3'),
+                            maxPrice: APIFeatures.createMaxMinPriceFacetQuery(-1),
+                            minPrice: APIFeatures.createMaxMinPriceFacetQuery(1),
+                        },
+                    },
+                ],
+                as: 'facets',
             },
         },
-    ])
+        {
+            $project: {
+                facets: {
+                    $first: '$facets',
+                },
+            },
+        },
+        {
+            $unwind: '$facets.size',
+        },
+        {
+            $unwind: '$facets.color',
+        },
+        {
+            $unwind: '$facets.material',
+        },
+        {
+            $group: {
+                _id: null,
+                size: {
+                    $addToSet: '$facets.size',
+                },
+                color: {
+                    $addToSet: '$facets.color',
+                },
+                material: {
+                    $addToSet: '$facets.material',
+                },
+                maxPrice: {
+                    $max: '$facets.maxPrice',
+                },
+                minPrice: {
+                    $min: '$facets.minPrice',
+                },
+            },
+        },
+        // {
+        //     $facet: {
+        //         brand: APIFeatures.createFacetsQuery('vendor'),
+        //     },
+        // },
+    ]
 
-    const facets = await Promise.all([variantOptionFacets, productGeneralFacets])
+    if (req.query.category != null)
+        productAggregation.unshift({
+            $match: {
+                $expr: {
+                    $eq: ['$category', { $toObjectId: req.query.category }],
+                },
+            },
+        })
+
+    const productGeneralFacets = await Product.aggregate(productAggregation)
+
+    // console.log(productGeneralFacets[0].facets[0].size)
+
+    // const facets = await Promise.all([variantOptionFacets, productGeneralFacets])
 
     res.status(200).json({
         status: 'success',
         data: {
-            facets,
+            facets: productGeneralFacets,
         },
     })
 })
