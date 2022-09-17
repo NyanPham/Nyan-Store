@@ -1,4 +1,3 @@
-const mongoose = require('mongoose')
 const Product = require('../models/productModel')
 const Variant = require('../models/variantModel')
 const AppError = require('../utils/appError')
@@ -9,9 +8,9 @@ const catchAsync = require('../utils/catchAsync')
 const getSortQuery = (sortTerm) => {
     switch (sortTerm) {
         case 'oldest':
-            return 'createdAt'
-        case 'latest':
             return '-createdAt'
+        case 'latest':
+            return 'createdAt'
         case 'price-up':
             return 'price'
         case 'price-down':
@@ -44,45 +43,12 @@ const filterOptionsIfAny = (options, allOptions) => {
     return options?.length ? options : allOptions || []
 }
 
-exports.getCollectionAndCategoryIds = (req, res, next) => {
-    if (req.params.collectionId) req.body.collectionId = req.params.collectionId
-    if (req.params.categoryId) req.body.categoryId = req.params.categoryId
+const filterVariantIds = async (props) => {
+    const { size, allSize, color, allColor, material, allMaterial, minPrice, maxPrice } = props
 
-    next()
-}
-
-exports.filterProducts = catchAsync(async (req, res, next) => {
-    const {
-        size,
-        color,
-        material,
-        brand,
-        maxPrice,
-        minPrice,
-        sortByTerm,
-        categoryId,
-        emptyCategory,
-        searchTerm,
-        categoryName,
-    } = req.body.filterQuery
-    const { allSize, allColor, allMaterial, allBrand } = req.body.all
-    const searchRegexObj = {
-        $regex: searchTerm ? `^${searchTerm}` : '',
-        $options: 'mix',
-    }
-
-    const variantIds = await Variant.aggregate([
+    const variantAggregation = [
         {
             $match: {
-                option1: {
-                    $in: filterOptionsIfAny(size, allSize),
-                },
-                option2: {
-                    $in: filterOptionsIfAny(color, allColor),
-                },
-                option3: {
-                    $in: filterOptionsIfAny(material, allMaterial),
-                },
                 price: {
                     $gte: minPrice,
                     $lte: maxPrice,
@@ -94,7 +60,33 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
                 _id: 1,
             },
         },
-    ])
+    ]
+
+    const option1Array = filterOptionsIfAny(size, allSize)
+    const option2Array = filterOptionsIfAny(color, allColor)
+    const option3Array = filterOptionsIfAny(material, allMaterial)
+
+    if (option1Array.length > 0 && option1Array.length !== allSize.length)
+        variantAggregation[0].$match['option1'] = {
+            $in: option1Array,
+        }
+
+    if (option2Array.length > 0 && option2Array.length !== allColor.length)
+        variantAggregation[0].$match['option2'] = {
+            $in: option2Array,
+        }
+
+    if (option3Array.length > 0 && option3Array.length !== allMaterial.length)
+        variantAggregation[0].$match['option3'] = {
+            $in: option3Array,
+        }
+
+    const variantIds = await Variant.aggregate(variantAggregation)
+    return variantIds
+}
+
+const filterProductFromFacets = async (props) => {
+    const { categoryId, variantIds, brand, allBrand, searchRegexObj, categoryName, sortByTerm } = props
 
     const productFilterQuery = {
         category: categoryId,
@@ -110,6 +102,45 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
     if (categoryName.toLowerCase() === 'all') delete productFilterQuery['category']
 
     const products = await Product.find(productFilterQuery).sort(getSortQuery(sortByTerm))
+    return products
+}
+
+exports.getCollectionAndCategoryIds = (req, res, next) => {
+    if (req.params.collectionId) req.body.collectionId = req.params.collectionId
+    if (req.params.categoryId) req.body.categoryId = req.params.categoryId
+
+    next()
+}
+
+exports.filterProducts = catchAsync(async (req, res, next) => {
+    const { size, color, material, brand, maxPrice, minPrice, sortByTerm, categoryId, searchTerm, categoryName } =
+        req.body.filterQuery
+    const { allSize, allColor, allMaterial, allBrand } = req.body.all
+    const searchRegexObj = {
+        $regex: searchTerm ? `^${searchTerm}` : '',
+        $options: 'mix',
+    }
+
+    const variantIds = await filterVariantIds({
+        color,
+        allColor,
+        size,
+        allSize,
+        material,
+        allMaterial,
+        minPrice,
+        maxPrice,
+    })
+
+    const products = await filterProductFromFacets({
+        categoryId,
+        categoryName,
+        variantIds,
+        searchRegexObj,
+        sortByTerm,
+        brand,
+        allBrand,
+    })
 
     res.status(200).json({
         status: 'success',
@@ -121,125 +152,120 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
 })
 
 exports.getFilterFacets = catchAsync(async (req, res, next) => {
-    // const variantOptionFacets = Variant.aggregate([
-    //     {
-    //         $facet: {
-    //             size: APIFeatures.createFacetsQuery('option1'),
-    //             color: APIFeatures.createFacetsQuery('option2'),
-    //             material: APIFeatures.createFacetsQuery('option3'),
-    //             maxPrice: APIFeatures.createMaxMinPriceFacetQuery(-1),
-    //             minPrice: APIFeatures.createMaxMinPriceFacetQuery(1),
-    //         },
-    //     },
-    // ])
-
-    const productAggregation = [
-        {
-            $lookup: {
-                from: 'variants',
-                let: { variant_ids: '$variants', vendor: '$vendor' },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: {
-                                $in: ['$_id', '$$variant_ids'],
+    const lookUpVariantStage = {
+        $lookup: {
+            from: 'variants',
+            let: { variant_ids: '$variants', vendor: '$vendor' },
+            pipeline: [
+                {
+                    $match: {
+                        $expr: {
+                            $in: ['$_id', '$$variant_ids'],
+                        },
+                    },
+                },
+                {
+                    $facet: {
+                        size: APIFeatures.createFacetsQuery('option1'),
+                        color: APIFeatures.createFacetsQuery('option2'),
+                        material: APIFeatures.createFacetsQuery('option3'),
+                        maxPrice: APIFeatures.createMaxMinPriceFacetQuery(-1),
+                        minPrice: APIFeatures.createMaxMinPriceFacetQuery(1),
+                        brand: [
+                            {
+                                $group: {
+                                    _id: '$$vendor',
+                                },
                             },
-                        },
+                            {
+                                $addFields: {
+                                    value: '$_id',
+                                },
+                            },
+                            {
+                                $project: {
+                                    value: 1,
+                                    _id: 0,
+                                },
+                            },
+                        ],
                     },
-                    {
-                        $facet: {
-                            size: APIFeatures.createFacetsQuery('option1'),
-                            color: APIFeatures.createFacetsQuery('option2'),
-                            material: APIFeatures.createFacetsQuery('option3'),
-                            maxPrice: APIFeatures.createMaxMinPriceFacetQuery(-1),
-                            minPrice: APIFeatures.createMaxMinPriceFacetQuery(1),
-                            brands: [
-                                {
-                                    $group: {
-                                        _id: '$$vendor',
-                                    },
-                                },
-                                {
-                                    $addFields: {
-                                        value: '$_id',
-                                    },
-                                },
-                                {
-                                    $project: {
-                                        value: 1,
-                                        _id: 0,
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-                as: 'facets',
+                },
+            ],
+            as: 'facets',
+        },
+    }
+
+    const getFacetFieldStage = {
+        $project: {
+            facets: {
+                $first: '$facets',
             },
         },
-        {
-            $project: {
-                facets: {
-                    $first: '$facets',
-                },
+    }
+
+    const unwindOption = (option) => {
+        return { $unwind: option }
+    }
+
+    const groupFacetStage = {
+        $group: {
+            _id: null,
+            size: {
+                $addToSet: '$facets.size',
+            },
+            color: {
+                $addToSet: '$facets.color',
+            },
+            material: {
+                $addToSet: '$facets.material',
+            },
+            maxPrice: {
+                $max: '$facets.maxPrice.value',
+            },
+            minPrice: {
+                $min: '$facets.minPrice.value',
+            },
+            brand: {
+                $addToSet: '$facets.brand',
             },
         },
-        {
-            $unwind: '$facets.size',
+    }
+
+    const eliminateIdFieldStage = {
+        $project: {
+            _id: 0,
         },
-        {
-            $unwind: '$facets.color',
-        },
-        {
-            $unwind: '$facets.material',
-        },
-        {
-            $unwind: '$facets.brands',
-        },
-        {
-            $group: {
-                _id: null,
-                size: {
-                    $addToSet: '$facets.size',
-                },
-                color: {
-                    $addToSet: '$facets.color',
-                },
-                material: {
-                    $addToSet: '$facets.material',
-                },
-                maxPrice: {
-                    $max: '$facets.maxPrice.value',
-                },
-                minPrice: {
-                    $min: '$facets.minPrice.value',
-                },
-                brands: {
-                    $addToSet: '$facets.brands',
-                },
-            },
-        },
+    }
+
+    const productFacetsAggregation = [
+        lookUpVariantStage,
+        getFacetFieldStage,
+        unwindOption('$facets.size'),
+        unwindOption('$facets.color'),
+        unwindOption('$facets.material'),
+        unwindOption('$facets.brand'),
+        groupFacetStage,
+        eliminateIdFieldStage,
     ]
 
-    if (req.query.category != null)
-        productAggregation.unshift({
+    if (req.query.category != null) {
+        const matchCategoryStage = {
             $match: {
                 $expr: {
                     $eq: ['$category', { $toObjectId: req.query.category }],
                 },
             },
-        })
+        }
+        productFacetsAggregation.unshift(matchCategoryStage)
+    }
 
-    const productGeneralFacets = await Product.aggregate(productAggregation)
-
-    // console.log(productGeneralFacets[0].facets[0].size)
-
-    // const facets = await Promise.all([variantOptionFacets, productGeneralFacets])
+    const facets = await Product.aggregate(productFacetsAggregation)
 
     res.status(200).json({
         status: 'success',
         data: {
-            facets: productGeneralFacets,
+            facets,
         },
     })
 })

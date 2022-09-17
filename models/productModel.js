@@ -121,6 +121,12 @@ productSchema.pre('save', function (next) {
     next()
 })
 
+productSchema.pre('save', function (next) {
+    this.price = this.variants[0].price
+
+    next()
+})
+
 const Product = mongoose.model('Product', productSchema)
 
 module.exports = Product
