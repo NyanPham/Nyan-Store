@@ -121,23 +121,23 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
 })
 
 exports.getFilterFacets = catchAsync(async (req, res, next) => {
-    const variantOptionFacets = Variant.aggregate([
-        {
-            $facet: {
-                size: APIFeatures.createFacetsQuery('option1'),
-                color: APIFeatures.createFacetsQuery('option2'),
-                material: APIFeatures.createFacetsQuery('option3'),
-                maxPrice: APIFeatures.createMaxMinPriceFacetQuery(-1),
-                minPrice: APIFeatures.createMaxMinPriceFacetQuery(1),
-            },
-        },
-    ])
+    // const variantOptionFacets = Variant.aggregate([
+    //     {
+    //         $facet: {
+    //             size: APIFeatures.createFacetsQuery('option1'),
+    //             color: APIFeatures.createFacetsQuery('option2'),
+    //             material: APIFeatures.createFacetsQuery('option3'),
+    //             maxPrice: APIFeatures.createMaxMinPriceFacetQuery(-1),
+    //             minPrice: APIFeatures.createMaxMinPriceFacetQuery(1),
+    //         },
+    //     },
+    // ])
 
     const productAggregation = [
         {
             $lookup: {
                 from: 'variants',
-                let: { variant_ids: '$variants' },
+                let: { variant_ids: '$variants', vendor: '$vendor' },
                 pipeline: [
                     {
                         $match: {
@@ -153,6 +153,24 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
                             material: APIFeatures.createFacetsQuery('option3'),
                             maxPrice: APIFeatures.createMaxMinPriceFacetQuery(-1),
                             minPrice: APIFeatures.createMaxMinPriceFacetQuery(1),
+                            brands: [
+                                {
+                                    $group: {
+                                        _id: '$$vendor',
+                                    },
+                                },
+                                {
+                                    $addFields: {
+                                        value: '$_id',
+                                    },
+                                },
+                                {
+                                    $project: {
+                                        value: 1,
+                                        _id: 0,
+                                    },
+                                },
+                            ],
                         },
                     },
                 ],
@@ -176,6 +194,9 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
             $unwind: '$facets.material',
         },
         {
+            $unwind: '$facets.brands',
+        },
+        {
             $group: {
                 _id: null,
                 size: {
@@ -188,18 +209,16 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
                     $addToSet: '$facets.material',
                 },
                 maxPrice: {
-                    $max: '$facets.maxPrice',
+                    $max: '$facets.maxPrice.value',
                 },
                 minPrice: {
-                    $min: '$facets.minPrice',
+                    $min: '$facets.minPrice.value',
+                },
+                brands: {
+                    $addToSet: '$facets.brands',
                 },
             },
         },
-        // {
-        //     $facet: {
-        //         brand: APIFeatures.createFacetsQuery('vendor'),
-        //     },
-        // },
     ]
 
     if (req.query.category != null)
