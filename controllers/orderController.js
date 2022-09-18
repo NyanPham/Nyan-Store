@@ -23,7 +23,11 @@ exports.getWebhookSession = async (req, res, next) => {
     try {
         event = stripe.webhooks.constructEvent(req.body, signature, process.env.STRIPE_CHECKOUT_KEY)
     } catch (err) {
-        return next(err)
+        return res.status(400).json({
+            status: 'fail',
+            err: err,
+            message: err.message,
+        })
     }
 
     switch (event.type) {
