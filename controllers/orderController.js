@@ -78,8 +78,8 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
                         description: product.summary,
                         images: variant.images,
                         metadata: {
-                            product_id: product._id,
-                            variant_id: variant._id,
+                            product_id: product._id.toString(),
+                            variant_id: variant._id.toString(),
                             quantity: item.quantity,
                         },
                     },
