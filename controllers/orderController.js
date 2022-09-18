@@ -8,6 +8,40 @@ const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 const factory = require('./factoryHandler')
 
+const createOrderFromSession = (session) =>
+    catchAsync(async (req, res, next) => {
+        console.log(session)
+    })
+
+exports.getWebhookSession = async (req, res, next) => {
+    const signature = req.headers['stripe-signature']
+
+    console.log(process.env.STRIPE_CHECKOUT_KEY)
+
+    let event, session
+
+    try {
+        event = stripe.webhooks.constructEvent(req.body, signature, process.env.STRIPE_CHECKOUT_KEY)
+    } catch (err) {
+        return next(err)
+    }
+
+    switch (event.type) {
+        case 'checkout.session.completed':
+            session = event.data.object
+            break
+        default:
+            session = null
+    }
+
+    createOrderFromSession(session)
+
+    res.status(200).json({
+        status: 'success',
+        session,
+    })
+}
+
 exports.getUserId = (req, res, next) => {
     if (req.params.userId) req.body.user = req.params.userId
 
@@ -21,7 +55,8 @@ exports.getUserId = (req, res, next) => {
 }
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
-    if (req.user == null || req.body.items.length == 0) return next(new AppError('Failed to proceed to checkout'))
+    if (req.user == null || req.body.items.length == 0)
+        return next(new AppError('Failed to proceed to checkout'))
 
     const lineItems = await Promise.all(
         req.body.items.map(async (item) => {

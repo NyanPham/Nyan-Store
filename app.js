@@ -20,6 +20,7 @@ const orderRouter = require('./routes/orderRoutes')
 const couponRouter = require('./routes/couponRoutes')
 const countryRouter = require('./routes/countryRoutes')
 const variantRouter = require('./routes/variantRoutes')
+const { getWebhookSession } = require('./controllers/orderController')
 
 const app = express()
 
@@ -80,6 +81,8 @@ app.use(
 
 // Serve
 app.use(express.static(path.join(__dirname, 'public')))
+
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }), getWebhookSession)
 
 // Transfer data to process
 app.use(express.json({ limit: '10kb' }))
