@@ -93,7 +93,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         customer_email: req.user.email,
         line_items: lineItems,
         meta_data: {
-            purchased_items: lineItems,
+            purchased_items: req.body.items,
         },
         mode: 'payment',
         client_reference_id: `order-${req.user._id}-${Date.now().toString()}`,
