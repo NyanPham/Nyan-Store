@@ -33,7 +33,7 @@ exports.getWebhookSession = async (req, res, next) => {
             session = event.data.object
 
             const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
-                expand: ['line_items'],
+                expand: ['line_items.data.price.product'],
             })
 
             purchased_line_items = line_items
