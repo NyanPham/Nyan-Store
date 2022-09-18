@@ -8,17 +8,15 @@ const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 const factory = require('./factoryHandler')
 
-const createOrderFromSession = (session) =>
+const createOrderFromSession = async (session, line_items) =>
     catchAsync(async (req, res, next) => {
-        console.log(session)
+        console.log(session, line_items)
     })
 
 exports.getWebhookSession = async (req, res, next) => {
     const signature = req.headers['stripe-signature']
 
-    console.log(process.env.STRIPE_CHECKOUT_KEY)
-
-    let event, session
+    let event, session, purchased_line_items
 
     try {
         event = stripe.webhooks.constructEvent(req.body, signature, process.env.STRIPE_CHECKOUT_KEY)
@@ -33,16 +31,23 @@ exports.getWebhookSession = async (req, res, next) => {
     switch (event.type) {
         case 'checkout.session.completed':
             session = event.data.object
+
+            const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
+                expand: ['line_items'],
+            })
+
+            purchased_line_items = line_items
             break
         default:
             session = null
     }
 
-    createOrderFromSession(session)
+    await createOrderFromSession(session, purchased_line_items)
 
     res.status(200).json({
         status: 'success',
         session,
+        purchased_line_items,
     })
 }
 
