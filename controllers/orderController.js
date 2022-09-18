@@ -10,30 +10,39 @@ const catchAsync = require('../utils/catchAsync')
 const factory = require('./factoryHandler')
 
 const createOrderFromSession = async (res, session, line_items) => {
-    const total = session.amount_total
-    const user = await User.findOne({ email: session.customer_email })
+    try {
+        const total = session.amount_total
+        const user = await User.findOne({ email: session.customer_email })
 
-    const purchasedItems = line_items.data.map((itemData) => {
-        const metadata = itemData.price.product.metadata
-        return {
-            product: metadata.product_id,
-            variant: metadata.variant_id,
-            quantity: parseInt(metadata.quantity),
+        const purchasedItems = line_items.data.map((itemData) => {
+            const metadata = itemData.price.product.metadata
+            return {
+                product: metadata.product_id,
+                variant: metadata.variant_id,
+                quantity: parseInt(metadata.quantity),
+            }
+        })
+
+        const newOrder = await Order.create({
+            total,
+            items: purchasedItems,
+            user: user._id,
+        })
+
+        if (newOrder != null) {
+            user.cart = []
+            await user.save({ validateBeforeSave: true })
         }
-    })
 
-    const newOrder = await Order.create({
-        total,
-        items: purchasedItems,
-        user: user._id,
-    })
-
-    res.status(200).json({
-        status: 'success',
-        session,
-        purchasedItems,
-        newOrder,
-    })
+        res.status(200).json({
+            status: 'success',
+            session,
+            purchasedItems,
+            newOrder,
+        })
+    } catch (err) {
+        return next(err)
+    }
 }
 
 exports.getWebhookSession = async (req, res, next) => {
