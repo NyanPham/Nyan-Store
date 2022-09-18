@@ -2,16 +2,39 @@ require('dotenv').config({ path: './config.env' })
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const Order = require('../models/orderModel')
+const User = require('../models/userModel')
 const Product = require('../models/productModel')
 const Variant = require('../models/variantModel')
 const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 const factory = require('./factoryHandler')
 
-const createOrderFromSession = async (session, line_items) =>
-    catchAsync(async (req, res, next) => {
-        console.log(session, line_items)
+const createOrderFromSession = async (res, session, line_items) => {
+    const total = session.amount_total
+    const user = await User.findOne({ email: session.customer_email })
+
+    const purchasedItems = line_items.data.map((itemData) => {
+        const metadata = itemData.price.product.metadata
+        return {
+            product: metadata.product_id,
+            variant: metadata.variant_id,
+            quantity: parseInt(metadata.quantity),
+        }
     })
+
+    const newOrder = await Order.create({
+        total,
+        items: purchasedItems,
+        user: user._id,
+    })
+
+    res.status(200).json({
+        status: 'success',
+        session,
+        purchasedItems,
+        newOrder,
+    })
+}
 
 exports.getWebhookSession = async (req, res, next) => {
     const signature = req.headers['stripe-signature']
@@ -42,13 +65,7 @@ exports.getWebhookSession = async (req, res, next) => {
             session = null
     }
 
-    await createOrderFromSession(session, purchased_line_items)
-
-    res.status(200).json({
-        status: 'success',
-        session,
-        purchased_line_items,
-    })
+    await createOrderFromSession(res, session, purchased_line_items)
 }
 
 exports.getUserId = (req, res, next) => {
