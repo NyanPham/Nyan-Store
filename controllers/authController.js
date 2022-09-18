@@ -49,6 +49,7 @@ const sendIsLoggedIn = (res, isLoggedIn, currentUser = null) => {
             name: currentUser.name,
             email: currentUser.email,
             photo: currentUser.photo,
+            role: currentUser.role,
         },
     })
 }
