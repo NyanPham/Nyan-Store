@@ -30,14 +30,20 @@ router
     .route('/myWishlist')
     .get(wishlistController.getWishlist)
     .patch(wishlistController.addWishlist)
-    .delete(wishlistController.removeWishlist)
+
+router.route('/removeWishlist').patch(wishlistController.removeWishlist)
 
 router.patch('/updatePassword', authController.updatePassword)
 router.get('/logOut', authController.logOut)
 
 // Me Routes
 router.get('/me', userController.getMe, userController.getUser)
-router.patch('/updateMe', userController.uploadUserPhoto, userController.resizeUserPhoto, userController.updateMe)
+router.patch(
+    '/updateMe',
+    userController.uploadUserPhoto,
+    userController.resizeUserPhoto,
+    userController.updateMe
+)
 router.delete('/deleteMe', userController.deleteMe)
 router.patch('/addToMyCart', cartController.addToMyCart)
 router.get('/getMyCart', cartController.getMyCart)
@@ -48,6 +54,10 @@ router.route('/myNote').get(userController.getOrderNote).patch(userController.up
 // User data routes
 router.use(authController.restrictTo('admin'))
 router.route('/').get(userController.getAllUsers)
-router.route('/:id').get(userController.getUser).patch(userController.updateUser).delete(userController.deleteUser)
+router
+    .route('/:id')
+    .get(userController.getUser)
+    .patch(userController.updateUser)
+    .delete(userController.deleteUser)
 
 module.exports = router

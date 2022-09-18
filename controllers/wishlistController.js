@@ -46,24 +46,18 @@ exports.addWishlist = catchAsync(async (req, res, next) => {
 })
 
 exports.removeWishlist = catchAsync(async (req, res, next) => {
-    const newWishlist = req.body.wishlist.filter((item) => item.item._id !== req.body.product)
-
-    const user = await User.findByIdAndUpdate(
-        req.user._id,
-        {
-            wishlist: newWishlist,
-        },
-        {
-            new: true,
-            runValidators: true,
-        }
-    )
+    const user = await User.findById(req.user._id)
 
     if (user == null) {
         return next(new AppError('No user found with that ID', 400))
     }
 
-    res.status(204).json({
+    user.wishlist = [...user.wishlist].filter(
+        (item) => item.item._id.toString() !== req.body.product
+    )
+    await user.save({ validateBeforeSave: true })
+
+    res.status(200).json({
         status: 'success',
         data: {
             wishlist: user.wishlist,
