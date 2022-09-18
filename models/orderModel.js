@@ -46,7 +46,12 @@ orderSchema.index({
 })
 
 orderSchema.pre(/^find/, function (next) {
-    this.populate({ path: 'variant' })
+    this.populate({
+        path: 'items',
+        populate: {
+            path: 'variant',
+        },
+    })
 
     next()
 })

@@ -115,11 +115,18 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     const currentUser = await User.findById(decoded.id)
     if (currentUser == null) {
-        return next(new AppError('The user belonging to the token does no longer exist. Please log in again', 400))
+        return next(
+            new AppError(
+                'The user belonging to the token does no longer exist. Please log in again',
+                400
+            )
+        )
     }
 
     if (currentUser.changedPasswordAfter(decoded.iat)) {
-        return next(new AppError('The password has been changed. Please log in again to continue', 403))
+        return next(
+            new AppError('The password has been changed. Please log in again to continue', 403)
+        )
     }
 
     req.user = currentUser
