@@ -86,7 +86,17 @@ const filterVariantIds = async (props) => {
 }
 
 const filterProductFromFacets = async (props) => {
-    const { categoryId, variantIds, brand, allBrand, searchRegexObj, categoryName, sortByTerm } = props
+    const {
+        categoryId,
+        variantIds,
+        brand,
+        allBrand,
+        searchRegexObj,
+        categoryName,
+        sortByTerm,
+        page,
+        limit,
+    } = props
 
     const productFilterQuery = {
         category: categoryId,
@@ -101,8 +111,19 @@ const filterProductFromFacets = async (props) => {
 
     if (categoryName.toLowerCase() === 'all') delete productFilterQuery['category']
 
-    const products = await Product.find(productFilterQuery).sort(getSortQuery(sortByTerm))
-    return products
+    const productsCountQuery = Product.find(productFilterQuery).count()
+
+    const productsQuery = Product.find(productFilterQuery)
+        .sort(getSortQuery(sortByTerm))
+        .skip((page - 1) * limit)
+        .limit(limit)
+
+    const productsResult = await Promise.all([productsCountQuery, productsQuery])
+
+    return {
+        productCount: productsResult[0],
+        products: productsResult[1],
+    }
 }
 
 exports.getCollectionAndCategoryIds = (req, res, next) => {
@@ -113,8 +134,20 @@ exports.getCollectionAndCategoryIds = (req, res, next) => {
 }
 
 exports.filterProducts = catchAsync(async (req, res, next) => {
-    const { size, color, material, brand, maxPrice, minPrice, sortByTerm, categoryId, searchTerm, categoryName } =
-        req.body.filterQuery
+    const {
+        size,
+        color,
+        material,
+        brand,
+        maxPrice,
+        minPrice,
+        sortByTerm,
+        categoryId,
+        searchTerm,
+        categoryName,
+        limit,
+        page,
+    } = req.body.filterQuery
     const { allSize, allColor, allMaterial, allBrand } = req.body.all
     const searchRegexObj = {
         $regex: searchTerm ? `^${searchTerm}` : '',
@@ -132,7 +165,7 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
         maxPrice,
     })
 
-    const products = await filterProductFromFacets({
+    const { productCount, products } = await filterProductFromFacets({
         categoryId,
         categoryName,
         variantIds,
@@ -140,11 +173,13 @@ exports.filterProducts = catchAsync(async (req, res, next) => {
         sortByTerm,
         brand,
         allBrand,
+        page,
+        limit,
     })
 
     res.status(200).json({
         status: 'success',
-        results: products.length,
+        results: productCount,
         data: {
             docs: products,
         },
