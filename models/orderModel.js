@@ -46,6 +46,8 @@ orderSchema.index({
 })
 
 orderSchema.pre(/^find/, function (next) {
+    this.populate({ path: 'variant' })
+
     next()
 })
 
