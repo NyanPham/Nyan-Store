@@ -92,6 +92,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         cancel_url: 'https://elaborate-chimera-ea1e59.netlify.app/',
         customer_email: req.user.email,
         line_items: lineItems,
+        meta_data: {
+            purchased_items: lineItems,
+        },
         mode: 'payment',
         client_reference_id: `order-${req.user._id}-${Date.now().toString()}`,
     })
