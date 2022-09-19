@@ -16,8 +16,8 @@ router.patch('/resetPassword/:resetToken', authController.resetPassword)
 router.get('/isLoggedIn', authController.isLoggedIn)
 
 // To bidding
-router.use('/:userId/bidding', auctionRouter)
-router.use('/myBidding', auctionRouter)
+router.use('/:userId/biddings', auctionRouter)
+router.use('/myBiddings', auctionRouter)
 
 // To orders
 router.use('/:userId/orders', orderRouter)

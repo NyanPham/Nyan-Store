@@ -10,11 +10,23 @@ router.use('/:categoryId/products', productRouter)
 router
     .route('/')
     .get(categoryController.getAllCategories)
-    .post(authController.protect, authController.restrictTo('admin'), categoryController.createCategory)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin'),
+        categoryController.createCategory
+    )
 router
     .route('/:id')
     .get(categoryController.getCategory)
-    .patch(authController.protect, authController.restrictTo('admin'), categoryController.updateCategory)
-    .delete(authController.protect, authController.restrictTo('admin'), categoryController.deleteCategory)
+    .patch(
+        authController.protect,
+        authController.restrictTo('admin'),
+        categoryController.updateCategory
+    )
+    .delete(
+        authController.protect,
+        authController.restrictTo('admin'),
+        categoryController.deleteCategory
+    )
 
 module.exports = router
