@@ -9,8 +9,8 @@ const couponSchema = new mongoose.Schema({
     percentOff: {
         type: Number,
         validate: {
-            validator: function () {
-                return this.percentOff != null || this.amountOff != null
+            validator: function (percentOff) {
+                return percentOff != null || this.amountOff != null
             },
             message: 'A coupon must have the percentOff or amountOff',
         },
@@ -18,10 +18,10 @@ const couponSchema = new mongoose.Schema({
     amountOff: {
         type: Number,
         validate: {
-            validator: function () {
-                return this.percentOff != null || this.amountOff != null
+            validator: function (amountOff) {
+                return this.percentOff != null || amountOff != null
             },
-            message: 'A coupon must have percentOff or amountOff',
+            message: 'A coupon must have amountOff or percentOff ',
         },
     },
     products: [
