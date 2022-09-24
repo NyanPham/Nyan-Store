@@ -30,6 +30,7 @@ const signAndSendToken = (user, res, statusCode) => {
             name: user.name,
             email: user.email,
             photo: user.photo,
+            role: user.role,
         },
     })
 }
