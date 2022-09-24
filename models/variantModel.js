@@ -20,6 +20,7 @@ const variantSchema = new mongoose.Schema({
         type: Number,
         validate: {
             validator: function (priceToCompare) {
+                if (!this.price) return true
                 return priceToCompare > this.price
             },
             message: 'Compare price must be larger than price',
