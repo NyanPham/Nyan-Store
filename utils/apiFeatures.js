@@ -16,6 +16,7 @@ class APIFeatures {
         )
 
         const parsedQueryObj = JSON.parse(queryString)
+
         this.query.find(parsedQueryObj)
 
         return this
