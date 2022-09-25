@@ -6,7 +6,12 @@ router.route('/').get(variantController.getAllVariants).post(variantController.c
 router
     .route('/:id')
     .get(variantController.getVariant)
-    .patch(variantController.updateVariant)
+    .patch(
+        variantController.uploadVariantImages,
+        variantController.resizeVariantImages,
+        variantController.setImagesToVariant,
+        variantController.updateVariant
+    )
     .delete(variantController.deleteVariant)
 
 module.exports = router

@@ -88,6 +88,8 @@ exports.getOne = (Model, populateObject = null) => {
 
 exports.updateOne = (Model) => {
     return catchAsync(async (req, res, next) => {
+        // console.log(req.body.images)
+
         const updatedDoc = await Model.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true,
