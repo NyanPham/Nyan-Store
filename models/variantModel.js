@@ -20,7 +20,7 @@ const variantSchema = new mongoose.Schema({
         type: Number,
         validate: {
             validator: function (priceToCompare) {
-                if (!this.price) return true
+                if (!this.price || priceToCompare < 0) return true
                 return priceToCompare > this.price
             },
             message: 'Compare price must be larger than price',
@@ -36,6 +36,18 @@ variantSchema.pre('save', function (next) {
     this.slug = slugify(this.name)
 
     next()
+})
+
+variantSchema.pre('save', function (next) {
+    if (this.comparePrice <= 0) this.comparePrice = undefined
+
+    next()
+})
+
+variantSchema.post('findOneAndUpdate', async function (doc) {
+    if (doc.comparePrice <= 0) doc.comparePrice = undefined
+
+    await doc.save()
 })
 
 const Variant = mongoose.model('Variant', variantSchema)
