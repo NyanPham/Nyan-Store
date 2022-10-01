@@ -1,5 +1,8 @@
 const factory = require('./factoryHandler')
 const Bidding = require('../models/auctionModel')
+const User = require('../models/userModel')
+const AppError = require('../utils/appError')
+const catchAsync = require('../utils/catchAsync')
 
 exports.getProductAndUserIds = (req, res, next) => {
     if (req.params.productId) req.body.product = req.params.productId
@@ -22,6 +25,30 @@ exports.getUserToBid = (req, res, next) => {
 
     next()
 }
+
+// exports.setAuctionWinner = catchAsync(async (req, res, next) => {
+//     const user = await User.findOne({ email: req.body.winner })
+
+//     if (user == null) {
+//         return next(new AppError('No user found. Please try again later', 400))
+//     }
+
+//     if (user.wonBidProducts.)
+
+//     user.wonBidProducts = [
+//         ...user.wonBidProducts,
+//         { product: req.body.product, variant: req.body.variant, bidPrice: req.body.bidPrice },
+//     ]
+
+//     await user.save()
+
+//     res.status(200).json({
+//         status: 'success',
+//         data: {
+//             wonBidProducts: user.wonBidProducts,
+//         },
+//     })
+// })
 
 exports.getAllBiddings = factory.getAll(Bidding)
 exports.createBidding = factory.createOne(Bidding)

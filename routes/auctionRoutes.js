@@ -4,6 +4,8 @@ const authController = require('../controllers/authController')
 
 const router = express.Router({ mergeParams: true })
 
+// router.patch('/setWonBid', auctionController.setAuctionWinner)
+
 router
     .route('/')
     .get(auctionController.getProductAndUserIds, auctionController.getAllBiddings)
@@ -11,7 +13,15 @@ router
 router
     .route('/:id')
     .get(auctionController.getBidding)
-    .patch(authController.protect, authController.restrictTo('admin'), auctionController.updateBidding)
-    .delete(authController.protect, authController.restrictTo('admin'), auctionController.deleteBidding)
+    .patch(
+        authController.protect,
+        authController.restrictTo('admin'),
+        auctionController.updateBidding
+    )
+    .delete(
+        authController.protect,
+        authController.restrictTo('admin'),
+        auctionController.deleteBidding
+    )
 
 module.exports = router

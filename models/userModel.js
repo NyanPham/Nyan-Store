@@ -66,6 +66,7 @@ const userSchema = new mongoose.Schema(
             },
         ],
         orders: Array,
+
         passwordChangedAt: Date,
         resetPasswordToken: String,
         resetPasswordExpires: Date,
@@ -97,6 +98,24 @@ const userSchema = new mongoose.Schema(
             default: true,
             select: false,
         },
+        // wonBidProducts: [
+        //     {
+        //         product: {
+        //             type: mongoose.Schema.ObjectId,
+        //             ref: 'Product',
+        //             required: true,
+        //         },
+        //         variant: {
+        //             type: mongoose.Schema.ObjectId,
+        //             ref: 'Variant',
+        //             required: true,
+        //         },
+        //         bidPrice: {
+        //             type: Number,
+        //             required: true,
+        //         },
+        //     },
+        // ],
     },
     {
         toObject: { virtuals: true },
