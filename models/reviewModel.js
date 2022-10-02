@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const Product = require('./productModel')
-const AppError = require('../utils/appError')
 
 const reviewSchema = new mongoose.Schema({
     user: {
@@ -26,10 +25,15 @@ const reviewSchema = new mongoose.Schema({
     },
 })
 
-reviewSchema.index({
-    user: 1,
-    product: 1,
-})
+reviewSchema.index(
+    {
+        user: 1,
+        product: 1,
+    },
+    {
+        unique: true,
+    }
+)
 
 reviewSchema.statics.updateRatingStatus = async function (productId) {
     try {

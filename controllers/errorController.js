@@ -6,7 +6,15 @@ const handleCastErrorDB = (err) => {
 }
 
 const handleDuplicateErrorDB = (err) => {
-    const message = `Duplicate value of ${Object.keys(err.keyValue)[0]}: ${Object.values(err.keyValue)[0]}`
+    let message
+    if (err.keyValue.user && err.keyValue.product) {
+        message = 'The user has already reviewed the product'
+    } else {
+        message = `Duplicate value of ${Object.keys(err.keyValue)[0]}: ${
+            Object.values(err.keyValue)[0]
+        }`
+    }
+
     return new AppError(message, 400)
 }
 

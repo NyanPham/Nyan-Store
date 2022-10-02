@@ -9,6 +9,6 @@ exports.setUserId = (req, res, next) => {
 
 exports.getAllReviews = factory.getAll(Review)
 exports.createReview = factory.createOne(Review)
-exports.getReview = factory.getOne(Review)
+exports.getReview = factory.getOne(Review, { path: 'user' })
 exports.updateReview = factory.updateOne(Review)
 exports.deleteReview = factory.deleteOne(Review)

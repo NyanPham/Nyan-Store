@@ -1,6 +1,5 @@
 const Product = require('../models/productModel')
 const Variant = require('../models/variantModel')
-const AppError = require('../utils/appError')
 const APIFeatures = require('../utils/apiFeatures')
 const factory = require('./factoryHandler')
 const catchAsync = require('../utils/catchAsync')
@@ -306,7 +305,10 @@ exports.getFilterFacets = catchAsync(async (req, res, next) => {
 })
 
 exports.getProductFromSlug = catchAsync(async (req, res, next) => {
-    const tour = await Product.findOne({ slug: req.params.slug })
+    const tour = await Product.findOne({ slug: req.params.slug }).populate({
+        path: 'reviews',
+        populate: { path: 'user' },
+    })
 
     res.status(200).json({
         status: 'success',
@@ -318,6 +320,6 @@ exports.getProductFromSlug = catchAsync(async (req, res, next) => {
 
 exports.getAllProducts = factory.getAll(Product)
 exports.createProducts = factory.createOne(Product)
-exports.getProduct = factory.getOne(Product, { path: 'reviews' })
+exports.getProduct = factory.getOne(Product, { path: 'reviews', populate: { path: 'user' } })
 exports.updateProduct = factory.updateOne(Product)
 exports.deleteProduct = factory.deleteOne(Product)
