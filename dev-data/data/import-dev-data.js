@@ -38,11 +38,13 @@ const importData = async () => {
 
 const deleteData = async () => {
     try {
-        // await Product.deleteMany()
+        await Product.deleteMany()
         // await User.deleteMany()
         // await Collection.deleteMany()
         // await Category.deleteMany()
         // await Variant.deleteMany()
+
+        // await Product.updateMany({}, { $unset: { reviews: '' } })
 
         console.log('Database is deleted successfully')
     } catch (err) {
@@ -53,6 +55,6 @@ const deleteData = async () => {
 }
 
 mongoose.connect(DB).then(async () => {
-    // await deleteData()
-    await importData()
+    await deleteData()
+    // await importData()
 })

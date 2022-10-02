@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const Product = require('./productModel')
+const AppError = require('../utils/appError')
 
 const reviewSchema = new mongoose.Schema({
     user: {
@@ -27,6 +29,52 @@ const reviewSchema = new mongoose.Schema({
 reviewSchema.index({
     user: 1,
     product: 1,
+})
+
+reviewSchema.statics.updateRatingStatus = async function (productId) {
+    try {
+        const ratingStats = await this.aggregate([
+            {
+                $match: {
+                    product: productId,
+                },
+            },
+            {
+                $group: {
+                    _id: '$product',
+                    avgRatings: { $avg: '$rating' },
+                    sumRatings: { $sum: 1 },
+                },
+            },
+        ])
+
+        if (ratingStats[0] !== null) {
+            await Product.findByIdAndUpdate(productId, {
+                ratingsAverage: ratingStats[0].avgRatings,
+                ratingsQuantity: ratingStats[0].sumRatings,
+            })
+        } else {
+            await Product.findByIdAndUpdate(productId, {
+                ratingsAverage: 0,
+                ratingsQuantity: 0,
+            })
+        }
+    } catch (err) {
+        console.log(err.message)
+    }
+}
+
+reviewSchema.post('save', function () {
+    this.constructor.updateRatingStatus(this.product)
+})
+
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+    this.r = await this.clone().findOne({})
+    next()
+})
+
+reviewSchema.post(/^findOneAnd/, async function () {
+    await this.r.constructor.updateRatingStatus(this.r.product)
 })
 
 const Review = mongoose.model('Review', reviewSchema)

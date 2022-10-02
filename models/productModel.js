@@ -68,12 +68,6 @@ const productSchema = new mongoose.Schema(
             },
         },
         auctionExpiresIn: Date,
-        reviews: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: 'Review',
-            },
-        ],
         ratingsAverage: {
             type: Number,
             default: 4.5,
@@ -84,8 +78,8 @@ const productSchema = new mongoose.Schema(
         },
     },
     {
-        toObject: { virtuals: true },
         toJSON: { virtuals: true },
+        toObject: { virtuals: true },
     }
 )
 
@@ -93,6 +87,12 @@ productSchema.index({
     name: 1,
     createdAt: -1,
     price: -1,
+})
+
+productSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'product',
+    localField: '_id',
 })
 
 productSchema.pre(/^find/, function (next) {

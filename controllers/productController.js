@@ -318,6 +318,6 @@ exports.getProductFromSlug = catchAsync(async (req, res, next) => {
 
 exports.getAllProducts = factory.getAll(Product)
 exports.createProducts = factory.createOne(Product)
-exports.getProduct = factory.getOne(Product)
+exports.getProduct = factory.getOne(Product, { path: 'reviews' })
 exports.updateProduct = factory.updateOne(Product)
 exports.deleteProduct = factory.deleteOne(Product)
