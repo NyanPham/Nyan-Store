@@ -110,7 +110,7 @@ const filterProductFromFacets = async (props) => {
 
     if (categoryName.toLowerCase() === 'all') delete productFilterQuery['category']
 
-    const productsCountQuery = Product.find(productFilterQuery).count()
+    const productsCountQuery = Product.countDocuments(productFilterQuery)
 
     const productsQuery = Product.find(productFilterQuery)
         .sort(getSortQuery(sortByTerm))
