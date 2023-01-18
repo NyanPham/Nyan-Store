@@ -26,11 +26,6 @@ const variantRouter = require('./routes/variantRoutes')
 const reviewRouter = require('./routes/reviewRoutes')
 const { getWebhookSession } = require('./controllers/orderController')
 
-// require('./utils/cache')
-
-const cluster = require('cluster')
-const cpuTotals = require('os').cpus().length
-
 const app = express()
 
 app.enable('trust proxy')
@@ -116,10 +111,3 @@ app.use('*', (req, res, next) => {
 // Error hanlder
 app.use(globalErrorHandler)
 module.exports = app
-
-// if (cluster.isMaster) {
-//     for (let i = 1; i <= cpuTotals; i++) {
-//         cluster.fork()
-//     }
-// } else {
-// }
