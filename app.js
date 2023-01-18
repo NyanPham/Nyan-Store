@@ -8,9 +8,9 @@ const mongoSanitize = require('express-mongo-sanitize')
 const hpp = require('hpp')
 const cors = require('cors')
 const compression = require('compression')
-const redis = require('redis')
+// const redis = require('redis')
 
-const client = redis.createClient(process.env.REDIS_URl)
+// const client = redis.createClient(process.env.REDIS_URl)
 
 const AppError = require('./utils/appError')
 const globalErrorHandler = require('./controllers/errorController')
@@ -31,95 +31,95 @@ const { getWebhookSession } = require('./controllers/orderController')
 const cluster = require('cluster')
 const cpuTotals = require('os').cpus().length
 
-if (cluster.isMaster) {
-    for (let i = 1; i <= cpuTotals; i++) {
-        cluster.fork()
-    }
-} else {
-    const app = express()
+const app = express()
 
-    app.enable('trust proxy')
+app.enable('trust proxy')
 
-    // Security
-    app.use(
-        cors({
-            origin: [
-                'https://elaborate-chimera-ea1e59.netlify.app',
-                'https://main--elaborate-chimera-ea1e59.netlify.app',
-            ],
-            credentials: true,
-        })
-    )
-
-    app.options(
-        '*',
-        cors({
-            origin: [
-                'https://elaborate-chimera-ea1e59.netlify.app',
-                'https://main--elaborate-chimera-ea1e59.netlify.app',
-            ],
-            credentials: true,
-        })
-    )
-
-    const limiter = rateLimit({
-        windowMs: 15 * 60 * 1000,
-        max: 100000,
-        message: 'You have reached the maximum query limit. Please wait for 15 minutes...',
+// Security
+app.use(
+    cors({
+        origin: [
+            'https://elaborate-chimera-ea1e59.netlify.app',
+            'https://main--elaborate-chimera-ea1e59.netlify.app',
+        ],
+        credentials: true,
     })
+)
 
-    app.use(helmet())
-    app.use(limiter)
-    app.use(mongoSanitize())
-    app.use(xss())
-    app.use(
-        hpp({
-            whitelist: [
-                'name',
-                'vendor',
-                'variants',
-                'SKU',
-                'slug',
-                'maxPrice',
-                'minPrice',
-                'categories',
-                'collections',
-                'tags',
-                'inventory',
-                'bidding',
-            ],
-        })
-    )
-
-    // Serve
-    app.use(express.static(path.join(__dirname, 'public')))
-
-    app.post('/webhook-checkout', express.raw({ type: 'application/json' }), getWebhookSession)
-
-    // Transfer data to process
-    app.use(express.json({ limit: '10kb' }))
-    app.use(cookieParser())
-
-    app.use(compression())
-
-    // Routes
-    app.use('/api/v1/products', productRouter)
-    app.use('/api/v1/users', userRouter)
-    app.use('/api/v1/collections', collectionRouter)
-    app.use('/api/v1/categories', categoryRouter)
-    app.use('/api/v1/biddings', auctionRouter)
-    app.use('/api/v1/orders', orderRouter)
-    app.use('/api/v1/coupons', couponRouter)
-    app.use('/api/v1/countries', countryRouter)
-    app.use('/api/v1/variants', variantRouter)
-    app.use('/api/v1/reviews', reviewRouter)
-
-    app.use('*', (req, res, next) => {
-        next(new AppError(`No routes found at ${req.originalUrl}`, 400))
+app.options(
+    '*',
+    cors({
+        origin: [
+            'https://elaborate-chimera-ea1e59.netlify.app',
+            'https://main--elaborate-chimera-ea1e59.netlify.app',
+        ],
+        credentials: true,
     })
+)
 
-    // Error hanlder
-    app.use(globalErrorHandler)
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100000,
+    message: 'You have reached the maximum query limit. Please wait for 15 minutes...',
+})
 
-    module.exports = app
-}
+app.use(helmet())
+app.use(limiter)
+app.use(mongoSanitize())
+app.use(xss())
+app.use(
+    hpp({
+        whitelist: [
+            'name',
+            'vendor',
+            'variants',
+            'SKU',
+            'slug',
+            'maxPrice',
+            'minPrice',
+            'categories',
+            'collections',
+            'tags',
+            'inventory',
+            'bidding',
+        ],
+    })
+)
+
+// Serve
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }), getWebhookSession)
+
+// Transfer data to process
+app.use(express.json({ limit: '10kb' }))
+app.use(cookieParser())
+
+app.use(compression())
+
+// Routes
+app.use('/api/v1/products', productRouter)
+app.use('/api/v1/users', userRouter)
+app.use('/api/v1/collections', collectionRouter)
+app.use('/api/v1/categories', categoryRouter)
+app.use('/api/v1/biddings', auctionRouter)
+app.use('/api/v1/orders', orderRouter)
+app.use('/api/v1/coupons', couponRouter)
+app.use('/api/v1/countries', countryRouter)
+app.use('/api/v1/variants', variantRouter)
+app.use('/api/v1/reviews', reviewRouter)
+
+app.use('*', (req, res, next) => {
+    next(new AppError(`No routes found at ${req.originalUrl}`, 400))
+})
+
+// Error hanlder
+app.use(globalErrorHandler)
+module.exports = app
+
+// if (cluster.isMaster) {
+//     for (let i = 1; i <= cpuTotals; i++) {
+//         cluster.fork()
+//     }
+// } else {
+// }
