@@ -3,6 +3,7 @@ const Variant = require('../models/variantModel')
 const APIFeatures = require('../utils/apiFeatures')
 const factory = require('./factoryHandler')
 const catchAsync = require('../utils/catchAsync')
+const redisClient = require('../utils/initCache')
 
 const getSortQuery = (sortTerm) => {
     switch (sortTerm) {
