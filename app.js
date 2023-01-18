@@ -45,7 +45,6 @@ if (cluster.isMaster) {
         cors({
             origin: [
                 'https://elaborate-chimera-ea1e59.netlify.app',
-                'http://localhost:8080',
                 'https://main--elaborate-chimera-ea1e59.netlify.app',
             ],
             credentials: true,
@@ -57,7 +56,6 @@ if (cluster.isMaster) {
         cors({
             origin: [
                 'https://elaborate-chimera-ea1e59.netlify.app',
-                'http://localhost:8080',
                 'https://main--elaborate-chimera-ea1e59.netlify.app',
             ],
             credentials: true,
