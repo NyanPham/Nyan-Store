@@ -53,7 +53,12 @@ exports.getMe = (req, res, next) => {
 
 exports.updateMe = catchAsync(async (req, res, next) => {
     if (req.body.password || req.body.passwordConfirm) {
-        return next(new AppError('Password cannot be updated at this route. Please use /updatePassword instead', 403))
+        return next(
+            new AppError(
+                'Password cannot be updated at this route. Please use /updatePassword instead',
+                403
+            )
+        )
     }
 
     const filteredFields = filterAllowedFields(req.body, 'name', 'email', 'address', 'phone')

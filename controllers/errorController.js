@@ -18,6 +18,10 @@ const handleDuplicateErrorDB = (err) => {
     return new AppError(message, 400)
 }
 
+const handlePasswordErrorDB = () => {
+    return new AppError('Password must have at least 8 characters', 400)
+}
+
 const sendErrorDev = (err, res) => {
     res.status(err.statusCode).json({
         status: err.status,
@@ -37,7 +41,7 @@ const sendErrorPro = (err, res) => {
 
     res.status(err.statusCode).json({
         status: err.status,
-        message: 'Oops! Something went really wrong!',
+        message: 'Oops! Something went wrong!',
     })
 }
 
@@ -55,6 +59,7 @@ const globalErrorHandler = (err, req, res, next) => {
 
         if (error.code === 11000) error = handleDuplicateErrorDB(error)
         if (error.name === 'CastError') error = handleCastErrorDB(error)
+        if (error?.errors?.password?.kind === 'minlength') error = handlePasswordErrorDB(error)
 
         sendErrorPro(error, res)
     }
