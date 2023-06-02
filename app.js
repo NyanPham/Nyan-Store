@@ -36,7 +36,7 @@ app.use(
         origin: [
             'https://elaborate-chimera-ea1e59.netlify.app',
             // 'http://localhost:8080',
-            'https://main--elaborate-chimera-ea1e59.netlify.app',
+            // 'https://main--elaborate-chimera-ea1e59.netlify.app',
         ],
         credentials: true,
     })
@@ -48,7 +48,7 @@ app.options(
         origin: [
             'https://elaborate-chimera-ea1e59.netlify.app',
             // 'http://localhost:8080',
-            'https://main--elaborate-chimera-ea1e59.netlify.app',
+            // 'https://main--elaborate-chimera-ea1e59.netlify.app',
         ],
         credentials: true,
     })
