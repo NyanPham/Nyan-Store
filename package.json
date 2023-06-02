@@ -2,7 +2,7 @@
     "name": "nyan-store",
     "version": "1.0.0",
     "description": "The backend of Nyan Store, a fullstack and fully functional Ecommerce Website",
-    "main": "app.js",
+    "main": "server.js",
     "scripts": {
         "start": "node server.js",
         "dev": "nodemon server.js"
