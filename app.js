@@ -2,6 +2,7 @@ const path = require('path')
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const helmet = require('helmet')
+const morgan = require('morgan');
 const xss = require('xss-clean')
 const rateLimit = require('express-rate-limit')
 const mongoSanitize = require('express-mongo-sanitize')
@@ -31,23 +32,23 @@ const app = express()
 app.enable('trust proxy')
 
 // Security
-// app.use(
-//     cors({
-//         origin: [
-//             'https://elaborate-chimera-ea1e59.netlify.app',
-//             // 'http://localhost:8080',
-//             // 'https://main--elaborate-chimera-ea1e59.netlify.app',
-//         ],
-//         credentials: true,
-//     })
-// )
-
 app.use(
     cors({
-        origin: 'https://elaborate-chimera-ea1e59.netlify.app',
+        origin: [
+            'https://elaborate-chimera-ea1e59.netlify.app',
+            'http://localhost:3000',
+            // 'https://main--elaborate-chimera-ea1e59.netlify.app',
+        ],
         credentials: true,
     })
 )
+
+// app.use(
+//     cors({
+//         origin: 'https://elaborate-chimera-ea1e59.netlify.app',
+//         credentials: true,
+//     })
+// )
 
 app.options(
     '*',
@@ -66,6 +67,11 @@ const limiter = rateLimit({
 })
 
 app.use(helmet())
+    
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+}
+
 app.use(limiter)
 app.use(mongoSanitize())
 app.use(xss())
