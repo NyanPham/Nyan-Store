@@ -32,30 +32,31 @@ const app = express()
 app.enable('trust proxy')
 
 // Security
-app.use(
-    cors({
-        origin: [
-            'https://elaborate-chimera-ea1e59.netlify.app',
-            'http://localhost:3000',
-            // 'https://main--elaborate-chimera-ea1e59.netlify.app',
-        ],
-        credentials: true,
-    })
-)
-
 // app.use(
 //     cors({
-//         origin: 'https://elaborate-chimera-ea1e59.netlify.app',
+//         origin: [
+//             'https://elaborate-chimera-ea1e59.netlify.app',
+//             'http://localhost:3000',
+//             'http://localhost:5173',
+//             'https://main--elaborate-chimera-ea1e59.netlify.app',
+//         ],
 //         credentials: true,
 //     })
 // )
+
+app.use(
+    cors({
+        origin: 'https://elaborate-chimera-ea1e59.netlify.app',
+        credentials: true,
+    })
+)
 
 app.options(
     '*',
     cors({
         origin: 'https://elaborate-chimera-ea1e59.netlify.app',
-        // 'http://localhost:8080',
         // 'https://main--elaborate-chimera-ea1e59.netlify.app',
+        // 'http://localhost:8080',
         credentials: true,
     })
 )

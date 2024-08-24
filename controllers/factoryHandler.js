@@ -31,12 +31,12 @@ exports.getAll = (Model) => {
     return catchAsync(async (req, res, next) => {
         const filterObj = constructQueryFilter(req.body)
 
-        // const features = new APIFeatures(Model.find(filterObj), req.query)
-        // features.find().sort().limitFields().paginate()
+        const features = new APIFeatures(Model.find(filterObj), req.query)
+        features.find().sort().limitFields().paginate()
+        
+        const docs = await features.query
 
-        // const docs = await features.query
-
-        const docs = await Model.find()
+        // const docs = await Model.find()
         
         res.status(200).json({
             status: 'success',
