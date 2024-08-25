@@ -11,6 +11,7 @@ const app = require('./app')
 
 const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
 
+mongoose.set('strictQuery', false);
 mongoose.connect(DB).then(() => console.log('Database is successfully connected!'))
 
 const port = process.env.PORT || 8080

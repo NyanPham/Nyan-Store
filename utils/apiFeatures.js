@@ -53,8 +53,6 @@ class APIFeatures {
             this.query.skip(skip).limit(limit)
         }
         
-        console.log(this.query)
-
         return this
     }
 
