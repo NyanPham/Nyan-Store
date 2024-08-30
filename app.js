@@ -30,6 +30,7 @@ const { getWebhookSession } = require('./controllers/orderController')
 const app = express()
 
 app.enable('trust proxy')
+app.set('trust proxy', ['13.228.199.255', '18.139.194.139'])
 
 // Security
 // app.use(
